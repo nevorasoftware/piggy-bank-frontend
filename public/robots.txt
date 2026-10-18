@@ -1,0 +1,3 @@
+# PiggyBank El Salvador
+User-agent: *
+Allow: /

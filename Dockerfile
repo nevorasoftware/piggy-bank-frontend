@@ -8,6 +8,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN mkdir -p /app/public
 
 # Argumentos de entorno para el build de Next.js
 ARG NEXT_PUBLIC_API_URL
