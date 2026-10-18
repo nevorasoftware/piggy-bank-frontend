@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Room } from '@/types';
+import PiggyMascot from '@/components/ui/PiggyMascot';
 import { Clock, Users, Sparkles, Trophy, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 interface GiftRoomCardProps {
@@ -100,9 +101,12 @@ export default function GiftRoomCard({ room }: GiftRoomCardProps) {
         )}
       </div>
 
-      {/* MOÑO GIGANTE DE REGALO */}
-      <div className="relative z-10 text-center -mt-2 mb-2">
-        <div className="inline-block transform group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300">
+      {/* MOÑO GIGANTE DE REGALO CON CERDITO ANIMADO */}
+      <div className="relative z-10 text-center -mt-2 mb-2 flex flex-col items-center">
+        <div className="relative inline-block transform group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300">
+          <div className="flex justify-center -mb-2">
+            <PiggyMascot size="sm" showCoins={false} />
+          </div>
           <div className="relative text-5xl sm:text-6xl select-none filter drop-shadow-[0_8px_16px_rgba(250,204,21,0.5)]">
             🎁
           </div>
@@ -173,16 +177,6 @@ export default function GiftRoomCard({ room }: GiftRoomCardProps) {
           <span className="font-semibold text-slate-400">Pase de entrada:</span>
           <span className="text-base font-black text-white font-mono bg-white/5 px-2.5 py-0.5 rounded-lg border border-white/10">
             ${Number(room.costoPase).toFixed(2)} USD
-          </span>
-        </div>
-
-        {/* Método de Pago Seguro */}
-        <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-          <span className="flex items-center gap-1 font-medium">
-            💳 Tarjeta Crédito o Débito
-          </span>
-          <span className="font-bold text-amber-300/80">
-            Visa • Mastercard • 3DS
           </span>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShieldCheck, HeartHandshake, Phone } from 'lucide-react';
-import PaymentLogos from '@/components/ui/PaymentLogos';
 
 export default function Footer() {
   return (
@@ -31,9 +30,6 @@ export default function Footer() {
               <li>• Validación de identidad obligatoria con DUI salvadoreño.</li>
               <li>• Transferencias directas a cuentas bancarias nacionales.</li>
             </ul>
-            <div className="pt-2">
-              <PaymentLogos showLabel={false} className="items-start" />
-            </div>
           </div>
 
           <div className="space-y-3">

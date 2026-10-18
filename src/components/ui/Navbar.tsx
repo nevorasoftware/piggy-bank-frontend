@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import PiggyMascot from '@/components/ui/PiggyMascot';
 import { Sparkles, Shield, User, LogOut, Ticket, Menu, X, Coins } from 'lucide-react';
 
 export default function Navbar() {
@@ -16,8 +17,8 @@ export default function Navbar() {
           {/* Logo & Brand */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
-              <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                <span className="text-2xl select-none">🐷</span>
+              <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center overflow-hidden">
+                <PiggyMascot size="sm" showCoins={false} />
               </div>
             </div>
             <div>

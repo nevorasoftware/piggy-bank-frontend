@@ -6,7 +6,7 @@ import { Room } from '@/types';
 import { apiRequest } from '@/lib/api';
 import { useSocket } from '@/context/SocketContext';
 import GiftRoomCard from '@/components/rooms/GiftRoomCard';
-import PaymentLogos from '@/components/ui/PaymentLogos';
+import PiggyMascot from '@/components/ui/PiggyMascot';
 import { Sparkles, Trophy, Users, Clock, ShieldCheck, ArrowRight, Zap, Coins, Gift } from 'lucide-react';
 
 export default function HomePage() {
@@ -49,13 +49,18 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* HERO SECTION CON ANIMACIONES */}
+      {/* HERO SECTION CON ANIMACIONES Y CERDITO */}
       <section className="relative overflow-hidden py-16 lg:py-24 border-b border-white/5">
         {/* Luces y gradientes de fondo */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-radial from-amber-500/20 via-pink-500/10 to-transparent blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-amber-400/40 text-amber-300 text-xs font-bold mb-8 animate-bounce-soft shadow-lg shadow-amber-500/20">
+          {/* Cerdito Mascota Animado en Grande con Lluvia de Monedas */}
+          <div className="mb-4 flex justify-center">
+            <PiggyMascot size="lg" showCoins={true} />
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-amber-400/40 text-amber-300 text-xs font-bold mb-6 animate-bounce-soft shadow-lg shadow-amber-500/20">
             <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
             <span>¡Salas de Sorteo con Premios Instantáneos en El Salvador!</span>
             <span className="text-base">🎁</span>
@@ -109,11 +114,6 @@ export default function HomePage() {
               <span className="text-2xl sm:text-3xl font-black text-rose-400 font-mono">6 / 3</span>
               <p className="text-xs text-slate-400 mt-1 font-semibold">Límite Diario Seguro</p>
             </div>
-          </div>
-
-          {/* Insignias de confianza en métodos de pago */}
-          <div className="max-w-4xl mx-auto mt-8 pt-8 border-t border-white/10">
-            <PaymentLogos />
           </div>
         </div>
       </section>
