@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+  <!-- Sombra suave del cursor -->
+  <ellipse cx="18" cy="30" rx="11" ry="3.5" fill="rgba(0,0,0,0.3)"/>
+  
+  <!-- Oreja izquierda -->
+  <path d="M7 11C5 6 9 3 13 6C14 7 13 11 7 11Z" fill="#F472B6" stroke="#BE185D" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M8.5 9C7.5 7 9.5 5.5 11.5 6.8" fill="#FBCFE8"/>
+
+  <!-- Oreja derecha -->
+  <path d="M29 11C31 6 27 3 23 6C22 7 23 11 29 11Z" fill="#F472B6" stroke="#BE185D" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M27.5 9C28.5 7 26.5 5.5 24.5 6.8" fill="#FBCFE8"/>
+
+  <!-- Cabeza cerdito rechoncha -->
+  <circle cx="18" cy="18" r="13" fill="#F472B6" stroke="#BE185D" stroke-width="1.8"/>
+  
+  <!-- Brillo de la cabeza 3D -->
+  <ellipse cx="13" cy="11" rx="5" ry="2.5" fill="#FDF2F8" opacity="0.6"/>
+
+  <!-- Ojos brillantes kawaii -->
+  <circle cx="13" cy="15" r="2.2" fill="#0F172A"/>
+  <circle cx="13.8" cy="14.2" r="0.9" fill="#FFFFFF"/>
+  <circle cx="23" cy="15" r="2.2" fill="#0F172A"/>
+  <circle cx="23.8" cy="14.2" r="0.9" fill="#FFFFFF"/>
+
+  <!-- Mejillas sonrojadas -->
+  <circle cx="9.5" cy="19.5" r="2.5" fill="#FB7185" opacity="0.7"/>
+  <circle cx="26.5" cy="19.5" r="2.5" fill="#FB7185" opacity="0.7"/>
+
+  <!-- Hocico rosado brillante -->
+  <rect x="12" y="17" width="12" height="8.5" rx="4.25" fill="#FDA4AF" stroke="#BE185D" stroke-width="1.4"/>
+  <!-- Fosas nasales -->
+  <ellipse cx="15.5" cy="21.2" rx="1.2" ry="1.6" fill="#881337"/>
+  <ellipse cx="20.5" cy="21.2" rx="1.2" ry="1.6" fill="#881337"/>
+
+  <!-- Pequeña moneda de oro en la oreja -->
+  <circle cx="28" cy="7" r="4.5" fill="#FACC15" stroke="#B45309" stroke-width="1.2"/>
+  <text x="28" y="9.2" font-size="5.5" font-weight="900" font-family="Arial, sans-serif" fill="#78350F" text-anchor="middle">$</text>
+
+  <!-- Pequeño destello de brillo -->
+  <path d="M4 17L5 19L7 20L5 21L4 23L3 21L1 20L3 19Z" fill="#FACC15" opacity="0.8"/>
+</svg>

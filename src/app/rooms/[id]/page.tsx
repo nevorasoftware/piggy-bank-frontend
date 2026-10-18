@@ -235,11 +235,12 @@ export default function RoomDetailPage() {
             </p>
           </div>
 
-          {/* Animación Interactiva del Cerdito Alcancía */}
+          {/* Animación Interactiva del Cerdito Alcancía y Caja de Regalo */}
           <PiggyBankAnimation
             status={room.estado}
             ticketsSold={room.ticketsSold}
             capacidadMax={room.capacidadMax}
+            premio={Number(room.premio)}
           />
 
           {/* Contador Regresivo al Sorteo */}

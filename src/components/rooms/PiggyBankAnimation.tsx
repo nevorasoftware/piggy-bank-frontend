@@ -3,17 +3,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { RoomStatus } from '@/types';
+import { Trophy, Sparkles } from 'lucide-react';
 
 interface PiggyBankAnimationProps {
   status: RoomStatus;
   ticketsSold: number;
   capacidadMax: number;
+  premio?: number;
 }
 
 export default function PiggyBankAnimation({
   status,
   ticketsSold,
   capacidadMax,
+  premio,
 }: PiggyBankAnimationProps) {
   const percentage = Math.min(100, Math.round((ticketsSold / capacidadMax) * 100));
   const isFull = status === 'LLENA' || ticketsSold >= capacidadMax;
@@ -34,26 +37,26 @@ export default function PiggyBankAnimation({
     : 'rgba(16, 185, 129, 0.4)';
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-6 select-none">
+    <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 select-none w-full max-w-lg">
       {/* Monedas de oro cayendo en animación continua si la sala está abierta */}
       {status === 'ABIERTA' && !isFull && (
-        <div className="absolute top-2 w-32 h-16 pointer-events-none overflow-hidden">
-          {[0, 1, 2].map((i) => (
+        <div className="absolute -top-4 w-40 h-20 pointer-events-none overflow-hidden z-20">
+          {[0, 1, 2, 3].map((i) => (
             <motion.div
               key={i}
               initial={{ y: -20, opacity: 0, scale: 0.8 }}
               animate={{
-                y: [ -10, 45 ],
-                opacity: [ 0, 1, 0 ],
-                rotate: [ 0, 180, 360 ],
+                y: [-10, 55],
+                opacity: [0, 1, 0],
+                rotate: [0, 180, 360],
               }}
               transition={{
-                duration: 1.5,
+                duration: 1.4,
                 repeat: Infinity,
-                delay: i * 0.45,
+                delay: i * 0.35,
                 ease: 'easeInOut',
               }}
-              className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-tr from-yellow-500 via-yellow-300 to-amber-600 border border-yellow-200 shadow-md shadow-yellow-500/50 flex items-center justify-center text-[10px] font-black text-amber-950"
+              className="absolute left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-500 via-yellow-300 to-amber-600 border border-yellow-200 shadow-lg shadow-yellow-500/50 flex items-center justify-center text-xs font-black text-amber-950"
             >
               $
             </motion.div>
@@ -61,23 +64,24 @@ export default function PiggyBankAnimation({
         </div>
       )}
 
-      {/* Cerdito Alcancía Ilustrado con Framer Motion */}
+      {/* Cerdito Alcancía Ilustrado con Corona de la Suerte */}
       <motion.div
         animate={{
-          scale: isDrawing ? [1, 1.06, 1] : [1, 1.02, 1],
-          y: isDrawing ? [-2, 2, -2] : [0, -4, 0],
+          scale: isDrawing ? [1, 1.08, 1] : [1, 1.03, 1],
+          y: isDrawing ? [-3, 3, -3] : [0, -6, 0],
+          rotate: isDrawing ? [-1.5, 1.5, -1.5] : [0, 0, 0],
         }}
         transition={{
           repeat: Infinity,
-          duration: isDrawing ? 0.6 : 3,
+          duration: isDrawing ? 0.4 : 2.8,
           ease: 'easeInOut',
         }}
         className="relative z-10"
         style={{ filter: `drop-shadow(0 15px 30px ${glowColor})` }}
       >
         <svg
-          width="200"
-          height="160"
+          width="180"
+          height="140"
           viewBox="0 0 200 160"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -133,48 +137,77 @@ export default function PiggyBankAnimation({
             strokeLinecap="round"
           />
         </svg>
-
-        {/* Insignia de estado flotante */}
-        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
-          {isFull ? (
-            <span className="px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase bg-rose-500 text-white shadow-lg shadow-rose-500/50 border border-rose-300">
-              🔴 LLENA - CUPOS LLENOS
-            </span>
-          ) : isDrawing ? (
-            <span className="px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/50 border border-yellow-200 animate-pulse">
-              🎰 SORTEANDO EN VIVO
-            </span>
-          ) : isClosed ? (
-            <span className="px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase bg-slate-800 text-slate-300 border border-slate-600">
-              CERRADA
-            </span>
-          ) : (
-            <span className="px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/40 border border-emerald-300">
-              🟢 SALA ACTIVA
-            </span>
-          )}
-        </div>
       </motion.div>
 
-      {/* Barra de progreso de llenado de alcancía */}
-      <div className="w-full max-w-xs mt-6 space-y-1.5 text-center">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-1">
-          <span>Ocupación de la Alcancía:</span>
-          <span className={isFull ? 'text-rose-400 font-extrabold' : 'text-amber-400'}>
-            {ticketsSold} / {capacidadMax} ({percentage}%)
-          </span>
+      {/* GRAN CAJA DE REGALO CON PREMIO AL CENTRO */}
+      <div className="relative w-full -mt-4 z-10 rounded-3xl bg-gradient-to-b from-slate-900/95 via-slate-950 to-slate-900/95 border-2 border-amber-400/50 p-6 shadow-2xl backdrop-blur-md overflow-hidden text-center">
+        {/* Cintas decorativas del regalo */}
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-10 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 opacity-25 pointer-events-none" />
+        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-8 bg-gradient-to-b from-yellow-400 via-amber-300 to-yellow-500 opacity-20 pointer-events-none" />
+
+        {/* Medallón Central del Premio */}
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-[11px] font-black uppercase tracking-wider text-amber-300 mb-2">
+            <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            Premio Acumulado en el Regalo
+          </div>
+
+          {premio !== undefined && (
+            <div className="my-1">
+              <span className="text-4xl sm:text-5xl font-black text-gold-gradient font-mono tracking-tight filter drop-shadow-[0_2px_12px_rgba(250,204,21,0.6)]">
+                ${premio.toFixed(2)}
+              </span>
+              <span className="text-xs font-black uppercase text-slate-300 tracking-widest block mt-0.5">
+                USD Directo a tu Cuenta
+              </span>
+            </div>
+          )}
+
+          {/* Insignia de estado animada */}
+          <div className="mt-3 inline-block">
+            {isFull ? (
+              <span className="px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-lg">
+                🔒 Alcancía Llena
+              </span>
+            ) : isDrawing ? (
+              <span className="px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-yellow-400/20 text-yellow-300 border border-yellow-400/60 shadow-lg animate-pulse flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                ¡Sorteando Ganador en Vivo!
+              </span>
+            ) : isClosed ? (
+              <span className="px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-slate-800 text-slate-400 border border-slate-700">
+                Sala Cerrada
+              </span>
+            ) : (
+              <span className="px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-lg flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                Sorteo Activo
+              </span>
+            )}
+          </div>
         </div>
-        <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-white/10 p-0.5">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${percentage}%` }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className={`h-full rounded-full ${
-              isFull
-                ? 'bg-gradient-to-r from-rose-500 to-red-600'
-                : 'bg-gradient-to-r from-emerald-400 via-amber-400 to-yellow-400'
-            }`}
-          />
+
+        {/* Barra de progreso de boletos vendidos */}
+        <div className="relative z-10 w-full mt-5 pt-4 border-t border-white/10 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-1">
+            <span>Boletos vendidos:</span>
+            <span className={isFull ? 'text-rose-400 font-extrabold' : 'text-amber-400 font-mono'}>
+              {ticketsSold} / {capacidadMax} ({percentage}%)
+            </span>
+          </div>
+
+          <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-white/10 p-0.5">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${percentage}%` }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              className={`h-full rounded-full ${
+                isFull
+                  ? 'bg-gradient-to-r from-rose-500 to-red-600'
+                  : 'bg-gradient-to-r from-emerald-400 via-yellow-400 to-amber-400'
+              }`}
+            />
+          </div>
         </div>
       </div>
     </div>
