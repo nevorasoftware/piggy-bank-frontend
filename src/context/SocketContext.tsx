@@ -22,10 +22,20 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketUrl =
+    let rawUrl =
       process.env.NEXT_PUBLIC_SOCKET_URL ||
       process.env.NEXT_PUBLIC_API_URL ||
-      'http://localhost:3000';
+      'http://localhost:8080';
+    rawUrl = rawUrl.trim();
+
+    if (!/^https?:\/\//i.test(rawUrl)) {
+      if (rawUrl.startsWith('localhost') || rawUrl.startsWith('127.0.0.1')) {
+        rawUrl = `http://${rawUrl}`;
+      } else {
+        rawUrl = `https://${rawUrl}`;
+      }
+    }
+    const socketUrl = rawUrl.replace(/\/+$/, '');
 
     const socketInstance = io(socketUrl, {
       transports: ['websocket', 'polling'],
