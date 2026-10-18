@@ -175,6 +175,16 @@ export default function GiftRoomCard({ room }: GiftRoomCardProps) {
             ${Number(room.costoPase).toFixed(2)} USD
           </span>
         </div>
+
+        {/* Método de Pago Seguro */}
+        <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+          <span className="flex items-center gap-1 font-medium">
+            💳 Tarjeta Crédito o Débito
+          </span>
+          <span className="font-bold text-amber-300/80">
+            Visa • Mastercard • 3DS
+          </span>
+        </div>
       </div>
     </div>
   );

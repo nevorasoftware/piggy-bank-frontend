@@ -10,6 +10,7 @@ import PiggyBankAnimation from '@/components/rooms/PiggyBankAnimation';
 import CountdownTimer from '@/components/rooms/CountdownTimer';
 import DigitalPass from '@/components/rooms/DigitalPass';
 import SorteoRoulette from '@/components/rooms/SorteoRoulette';
+import PaymentLogos from '@/components/ui/PaymentLogos';
 import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -285,15 +286,15 @@ export default function RoomDetailPage() {
               />
             </div>
           ) : (
-            /* Tarjeta de Compra de Pase con Wompi */
+            /* Tarjeta de Compra de Pase con Tarjeta */
             <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 space-y-6">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-1">
-                  Acceso a la Sala
+                  Acceso a la Sala de Regalo
                 </span>
                 <h3 className="text-xl font-black text-white">Comprar Pase Digital</h3>
                 <p className="text-xs text-slate-400 mt-1">
-                  Valida tus límites diarios de participación y adquiere tu número de la suerte al instante.
+                  Paga de forma instantánea con tu tarjeta de crédito o débito Visa o Mastercard.
                 </p>
               </div>
 
@@ -307,7 +308,7 @@ export default function RoomDetailPage() {
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] text-emerald-400 font-bold block">1 Boleto Único</span>
-                  <span className="text-xs text-slate-500">Pasarela Wompi SV</span>
+                  <span className="text-xs text-slate-400">Pago con Tarjeta</span>
                 </div>
               </div>
 
@@ -340,18 +341,23 @@ export default function RoomDetailPage() {
                   className="w-full py-4 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {buying ? (
-                    <span>Validando reglas y conectando Wompi...</span>
+                    <span>Validando reglas y procesando pago...</span>
                   ) : (
                     <>
                       <CreditCard className="w-4 h-4 text-slate-950" />
-                      Pagar con Wompi SV (${Number(room.costoPase).toFixed(2)})
+                      Pagar con Tarjeta de Crédito o Débito (${Number(room.costoPase).toFixed(2)})
                     </>
                   )}
                 </button>
               )}
 
+              {/* Logos Oficiales Visa, Mastercard, 3DS y PCI DSS */}
+              <div className="pt-2 border-t border-white/5">
+                <PaymentLogos showLabel={false} />
+              </div>
+
               <p className="text-[11px] text-center text-slate-500">
-                Se aplicarán las reglas de juego responsable: máximo 6 participaciones al día.
+                Protegido por autenticación bancaria 3D Secure y certificación internacional PCI DSS. Máximo 6 participaciones al día.
               </p>
             </div>
           )}

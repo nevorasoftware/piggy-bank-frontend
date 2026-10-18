@@ -86,7 +86,7 @@ export default function DigitalPass({
         <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px] text-slate-400">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            Wompi SV Certificado
+            Pago Seguro 3DS / PCI DSS
           </span>
           <span className="font-mono text-[10px] text-slate-500">
             EMITIDO: {new Date(ticket.createdAt).toLocaleDateString('es-SV')}

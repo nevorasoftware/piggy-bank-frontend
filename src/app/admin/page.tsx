@@ -35,7 +35,7 @@ export default function AdminDashboardPage() {
         </span>
         <h1 className="text-3xl font-black text-white">Dashboard de Operaciones</h1>
         <p className="text-xs text-slate-400 mt-1">
-          Métricas en tiempo real sincronizadas con la pasarela Wompi y base de datos PostgreSQL en Railway
+          Métricas en tiempo real sincronizadas con la pasarela de pagos con tarjeta y base de datos PostgreSQL en Railway
         </p>
       </div>
 

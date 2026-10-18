@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, HeartHandshake, Phone } from 'lucide-react';
+import PaymentLogos from '@/components/ui/PaymentLogos';
 
 export default function Footer() {
   return (
@@ -22,13 +23,17 @@ export default function Footer() {
           <div className="space-y-3">
             <h4 className="text-white font-bold text-sm flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              Seguridad y Cumplimiento
+              Seguridad y Métodos de Pago
             </h4>
             <ul className="text-xs space-y-2 text-slate-400">
-              <li>• Pagos procesados de forma 100% segura por Wompi El Salvador.</li>
+              <li>• Pagos con tarjeta de crédito o débito Visa y Mastercard 100% seguros.</li>
+              <li>• Protección con autenticación bancaria 3D Secure y certificación PCI DSS.</li>
               <li>• Validación de identidad obligatoria con DUI salvadoreño.</li>
-              <li>• Transferencias directas a cuentas de ahorro y corriente nacionales.</li>
+              <li>• Transferencias directas a cuentas bancarias nacionales.</li>
             </ul>
+            <div className="pt-2">
+              <PaymentLogos showLabel={false} className="items-start" />
+            </div>
           </div>
 
           <div className="space-y-3">

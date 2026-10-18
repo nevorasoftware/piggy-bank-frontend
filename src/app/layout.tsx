@@ -9,7 +9,7 @@ import FloatingCoins from '@/components/ui/FloatingCoins';
 
 export const metadata: Metadata = {
   title: 'PiggyBank El Salvador | Sorteos y Premios en Efectivo',
-  description: 'Participa en salas de sorteo comunitarias y gana premios directos a tu cuenta bancaria. Pagos seguros con Wompi El Salvador y verificación de DUI.',
+  description: 'Participa en salas de sorteo comunitarias y gana premios directos a tu cuenta bancaria. Pagos 100% seguros con Tarjeta de Crédito o Débito (Visa, Mastercard, 3D Secure, PCI-DSS) y verificación de DUI.',
 };
 
 export default function RootLayout({

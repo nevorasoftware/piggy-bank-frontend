@@ -6,6 +6,7 @@ import { Room } from '@/types';
 import { apiRequest } from '@/lib/api';
 import { useSocket } from '@/context/SocketContext';
 import GiftRoomCard from '@/components/rooms/GiftRoomCard';
+import PaymentLogos from '@/components/ui/PaymentLogos';
 import { Sparkles, Trophy, Users, Clock, ShieldCheck, ArrowRight, Zap, Coins, Gift } from 'lucide-react';
 
 export default function HomePage() {
@@ -68,7 +69,7 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300 mb-10 leading-relaxed font-medium">
-            Entra a tu sala de regalo favorita, consigue tu boleto con Wompi SV y sigue la cuenta regresiva en vivo. Si el cerdito de la suerte te elige, el premio va directo a tu cuenta bancaria.
+            Entra a tu sala de regalo favorita, consigue tu pase pagando con tu tarjeta de crédito o débito (Visa o Mastercard) y sigue la cuenta regresiva en vivo. Si el cerdito de la suerte te elige, el premio va directo a tu cuenta bancaria.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -98,7 +99,7 @@ export default function HomePage() {
             </div>
             <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
               <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono">100%</span>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Pagos con Wompi SV</p>
+              <p className="text-xs text-slate-400 mt-1 font-semibold">Tarjeta Crédito / Débito</p>
             </div>
             <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
               <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">10 Min</span>
@@ -108,6 +109,11 @@ export default function HomePage() {
               <span className="text-2xl sm:text-3xl font-black text-rose-400 font-mono">6 / 3</span>
               <p className="text-xs text-slate-400 mt-1 font-semibold">Límite Diario Seguro</p>
             </div>
+          </div>
+
+          {/* Insignias de confianza en métodos de pago */}
+          <div className="max-w-4xl mx-auto mt-8 pt-8 border-t border-white/10">
+            <PaymentLogos />
           </div>
         </div>
       </section>
@@ -124,7 +130,7 @@ export default function HomePage() {
             </h2>
           </div>
           <p className="text-sm text-slate-400 mt-2 md:mt-0 font-medium">
-            Elige el premio que deseas ganar e ingresa a la sala para asegurar tu boleto.
+            Paga tu pase con tarjeta de crédito o débito Visa o Mastercard de forma 100% segura.
           </p>
         </div>
 
@@ -176,7 +182,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-black text-white mb-2">2. Asegura tu Boleto</h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Realiza el pago del pase mediante la pasarela segura de Wompi El Salvador con tarjeta de crédito o débito local.
+                Paga tu pase al instante con cualquier tarjeta de crédito o débito Visa o Mastercard, protegido por 3D Secure y estándares PCI DSS.
               </p>
             </div>
 
