@@ -39,8 +39,5 @@ COPY --from=builder /app/package.json ./package.json
 
 USER nextjs
 
-ENV PORT=3000
-EXPOSE 3000
-
-# Iniciar Next.js en el puerto asignado dinámicamente por Railway
-CMD ["sh", "-c", "npm run start -- -p $PORT"]
+# Iniciar Next.js en 0.0.0.0 y en el puerto asignado dinámicamente por Railway
+CMD ["sh", "-c", "npm run start -- -H 0.0.0.0 -p ${PORT:-3000}"]
