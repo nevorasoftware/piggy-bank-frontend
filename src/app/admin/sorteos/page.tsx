@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '@/lib/api';
 import { Sorteo } from '@/types';
+import { formatPhoneDisplay } from '@/lib/phone';
 import { Trophy, CheckCircle, Clock, Building2, Phone, Sparkles, AlertCircle, Send, Mail } from 'lucide-react';
 
 export default function AdminSorteosPage() {
@@ -185,7 +186,7 @@ export default function AdminSorteosPage() {
                           {winnerEmail || 'Sin correo registrado'}
                         </p>
                         <p className="text-[10px] text-amber-400 font-mono mt-0.5">DUI: {s.ganador?.dui || 'N/D'}</p>
-                        <p className="text-[10px] text-slate-500">{s.ganador?.phone || 'N/D'}</p>
+                        <p className="text-[10px] text-slate-500 font-mono">{formatPhoneDisplay(s.ganador?.phone)}</p>
                       </td>
                       <td className="py-4 px-4 font-mono font-black text-emerald-400 text-sm">
                         ${Number(s.montoPremio).toFixed(2)} USD

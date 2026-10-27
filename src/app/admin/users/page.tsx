@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '@/lib/api';
 import { User } from '@/types';
+import { formatPhoneDisplay } from '@/lib/phone';
 import { Users, Building2, Phone, Fingerprint, CheckCircle2 } from 'lucide-react';
 
 export default function AdminUsersPage() {
@@ -76,7 +77,7 @@ export default function AdminUsersPage() {
                       {u.dui}
                     </td>
                     <td className="py-4 px-4 font-mono text-slate-300">
-                      {u.phone}
+                      {formatPhoneDisplay(u.phone)}
                     </td>
                     <td className="py-4 px-4">
                       {u.bankAccount ? (

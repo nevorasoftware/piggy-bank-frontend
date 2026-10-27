@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import DuiInput from '@/components/auth/DuiInput';
+import PhoneInput from '@/components/auth/PhoneInput';
+import { toBackendPhone } from '@/lib/phone';
 import TopCasinoBar from '@/components/casino/TopCasinoBar';
 import { apiRequest } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -31,6 +33,7 @@ export default function RegisterPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [dui, setDui] = useState('');
   const [isDuiValid, setIsDuiValid] = useState(false);
   const [password, setPassword] = useState('');
@@ -48,6 +51,11 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!isPhoneValid) {
+      setError('Por favor ingresa un número de teléfono salvadoreño válido (+503 ####-####).');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden.');
       return;
@@ -62,11 +70,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // Normalizar número telefónico si no lleva código +503
-      let cleanPhone = phone.trim();
-      if (!cleanPhone.startsWith('+503') && !cleanPhone.startsWith('503')) {
-        cleanPhone = `+503${cleanPhone.replace(/\D/g, '')}`;
-      }
+      // Normalizar número telefónico limpio para el backend (+503########)
+      const cleanPhone = toBackendPhone(phone);
 
       const res = await apiRequest('/api/auth/register', {
         method: 'POST',
@@ -276,24 +281,14 @@ export default function RegisterPage() {
                     }}
                   />
 
-                  {/* Teléfono Salvadoreño */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-amber-400" />
-                      Teléfono Celular (WhatsApp para OTP)
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+503 7123-4567"
-                      className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm font-mono transition-all"
-                    />
-                    <span className="text-[10px] text-slate-400 mt-1 block">
-                      Recibirás aquí tu código de seguridad OTP y notificaciones de boletos
-                    </span>
-                  </div>
+                  {/* Teléfono Salvadoreño (+503 ####-####) con Formato Visual y Validador */}
+                  <PhoneInput
+                    value={phone}
+                    onChange={(val, isValid) => {
+                      setPhone(val);
+                      setIsPhoneValid(isValid);
+                    }}
+                  />
 
                   {/* Correo Electrónico */}
                   <div>

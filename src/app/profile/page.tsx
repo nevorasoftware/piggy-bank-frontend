@@ -6,6 +6,7 @@ import { useSocket } from '@/context/SocketContext';
 import { apiRequest } from '@/lib/api';
 import { Ticket, AccountType } from '@/types';
 import DigitalPass from '@/components/rooms/DigitalPass';
+import { formatPhoneDisplay } from '@/lib/phone';
 import { Building2, CreditCard, Shield, Clock, Ticket as TicketIcon, CheckCircle2, AlertCircle, Save } from 'lucide-react';
 
 const SALVADORAN_BANKS = [
@@ -153,7 +154,7 @@ export default function ProfilePage() {
                 DUI: {user.dui}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono text-slate-400 bg-slate-900 border border-white/5">
-                {user.phone}
+                {formatPhoneDisplay(user.phone)}
               </span>
             </div>
           </div>
