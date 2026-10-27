@@ -178,3 +178,58 @@ select,
   animation: bounceSoft 2.5s ease-in-out infinite;
 }
 
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+@keyframes neonShift {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.6), 0 0 50px rgba(236, 72, 153, 0.4);
+    border-color: rgba(250, 204, 21, 0.9);
+  }
+  33% {
+    box-shadow: 0 0 35px rgba(236, 72, 153, 0.7), 0 0 65px rgba(168, 85, 247, 0.5);
+    border-color: rgba(236, 72, 153, 0.9);
+  }
+  66% {
+    box-shadow: 0 0 35px rgba(14, 165, 233, 0.7), 0 0 65px rgba(34, 197, 94, 0.5);
+    border-color: rgba(56, 189, 248, 0.9);
+  }
+}
+
+.animate-neon-shift {
+  animation: neonShift 5s ease-in-out infinite;
+}
+
+@keyframes floatCoin {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(0.9);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) rotate(45deg) scale(1.1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(80px) rotate(360deg) scale(0.85);
+    opacity: 0;
+  }
+}
+
+.animate-float-coin {
+  animation: floatCoin 2.4s ease-in-out infinite;
+}
+
+

@@ -3,6 +3,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+import { playCoinSound } from '@/lib/sound';
+
 interface PiggyMascotProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showCoins?: boolean;
@@ -69,11 +71,18 @@ export default function PiggyMascot({
           duration: 2.6,
           ease: 'easeInOut',
         }}
-        className="relative z-10 group"
+        whileTap={{ scale: 0.95 }}
+        onClick={playCoinSound}
+        className="relative z-10 group cursor-pointer"
       >
+        {/* Aura giratoria neón multicolor */}
+        {glow && (
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-cyan-400 opacity-60 blur-md animate-spin-slow pointer-events-none" />
+        )}
+
         <div
-          className={`relative rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 ${sizeClasses} ${
-            glow ? 'shadow-[0_0_25px_rgba(250,204,21,0.45)]' : ''
+          className={`relative rounded-full overflow-hidden p-0.5 bg-gradient-to-tr from-amber-400 via-pink-500 via-purple-600 to-yellow-300 ${sizeClasses} ${
+            glow ? 'shadow-[0_0_25px_rgba(250,204,21,0.6)]' : ''
           }`}
         >
           {/* Imagen Oficial del Cerdito Rey */}
@@ -87,6 +96,13 @@ export default function PiggyMascot({
           {/* Resplandor interno sutil */}
           <div className="absolute inset-0 rounded-full border border-yellow-300/40 pointer-events-none" />
         </div>
+
+        {/* Pequeña moneda dorada indicadora */}
+        {size !== 'sm' && (
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-tr from-yellow-300 to-amber-500 border border-white flex items-center justify-center font-black text-slate-950 text-[10px] shadow-lg">
+            $
+          </div>
+        )}
       </motion.div>
     </div>
   );

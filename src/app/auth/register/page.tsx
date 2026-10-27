@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import DuiInput from '@/components/auth/DuiInput';
 import TopCasinoBar from '@/components/casino/TopCasinoBar';
 import { apiRequest } from '@/lib/api';
@@ -137,35 +138,51 @@ export default function RegisterPage() {
                 Crea tu perfil de jugador con tu DUI salvadoreño. Participa en sorteos comunitarios cada 2 horas y recibe tus pagos directamente en tu cuenta bancaria.
               </p>
 
-              {/* Tarjeta de los Personajes */}
-              <div className="relative rounded-3xl overflow-hidden glass-panel border-2 border-amber-400/40 p-4 sm:p-5 bg-gradient-to-b from-purple-950/40 via-slate-900 to-slate-950 shadow-2xl">
-                <div className="flex items-center gap-4">
-                  {/* Avatar Presentadora */}
-                  <div className="w-16 h-20 sm:w-20 sm:h-24 rounded-2xl overflow-hidden ring-2 ring-pink-400/50 shadow-lg shrink-0">
+              {/* Tarjeta de los Personajes Animados */}
+              <div className="relative rounded-3xl overflow-hidden glass-panel border-2 border-amber-400/60 p-4 sm:p-5 bg-gradient-to-b from-purple-950/60 via-slate-900 to-slate-950 shadow-2xl shadow-purple-950/50">
+                {/* Auras y luces de color */}
+                <div className="absolute -top-10 -right-10 w-44 h-44 bg-pink-500/25 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-amber-400/25 rounded-full blur-2xl pointer-events-none" />
+
+                <div className="relative z-10 flex items-center gap-4">
+                  {/* Avatar Presentadora (Modelo Animada) */}
+                  <motion.div
+                    animate={{ y: [-4, 4, -4], rotate: [0, 1.5, 0] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                    className="relative w-18 h-24 sm:w-22 sm:h-28 rounded-2xl overflow-hidden ring-2 ring-pink-400/80 shadow-lg shadow-pink-500/40 shrink-0"
+                  >
                     <img
                       src="/images/premios-host.jpg"
                       alt="Anfitriona ¡Premio!"
                       className="w-full h-full object-cover"
                     />
-                  </div>
+                    <span className="absolute top-1 right-1 text-xs animate-pulse">✨</span>
+                  </motion.div>
 
-                  {/* Avatar Rey Piggy */}
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 shrink-0">
+                  {/* Avatar Rey Piggy Animado */}
+                  <motion.div
+                    animate={{ y: [4, -4, 4], rotate: [-2, 2, -2] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-pink-500 to-yellow-300 shadow-xl shadow-amber-500/50 shrink-0"
+                  >
                     <img
                       src="/images/piggy-logo.jpg"
                       alt="Rey Piggy"
                       className="w-full h-full object-cover rounded-full"
                     />
-                  </div>
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-amber-400 border border-white flex items-center justify-center text-[10px] font-black text-slate-950 shadow-md">
+                      $
+                    </div>
+                  </motion.div>
 
                   {/* Texto de Garantía */}
                   <div className="text-left">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 inline-block mb-1">
-                      ANFITRIONES
+                    <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 inline-block mb-1 shadow-sm">
+                      ANFITRIONES OFICIALES
                     </span>
                     <h4 className="text-sm font-black text-white">Sorteos Certificados</h4>
-                    <p className="text-[11px] text-slate-300 mt-0.5">
-                      Transparencia total y entrega a nombre del titular registrado.
+                    <p className="text-[11px] text-amber-300/90 font-bold mt-0.5">
+                      Transparencia total y entrega directa a titular registrado
                     </p>
                   </div>
                 </div>

@@ -9,7 +9,9 @@ import { useAuth } from '@/context/AuthContext';
 import GiftRoomCard from '@/components/rooms/GiftRoomCard';
 import TopCasinoBar from '@/components/casino/TopCasinoBar';
 import CasinoStageHero from '@/components/casino/CasinoStageHero';
-import { Gift, Crown, ArrowRight } from 'lucide-react';
+import { Gift, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { playCoinSound, playWinSound } from '@/lib/sound';
 
 export default function HomePage() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -105,77 +107,118 @@ export default function HomePage() {
       </section>
 
       {/* ======================================================== */}
-      {/* 4. SHOWCASE DE PERSONAJES OFICIALES DE PIGGYBANK */}
+      {/* 4. SHOWCASE DE PERSONAJES OFICIALES DE PIGGYBANK ANIMADOS */}
       {/* ======================================================== */}
-      <section className="py-20 border-t border-white/10 bg-gradient-to-b from-slate-950 via-[#0d091f] to-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-20 border-t border-white/10 bg-gradient-to-b from-[#100624] via-[#0d091f] to-slate-950 overflow-hidden">
+        {/* Luces y resplandores neón de fondo */}
+        <div className="absolute top-1/2 left-10 w-[500px] h-[350px] bg-purple-600/20 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-1/3 right-10 w-[500px] h-[350px] bg-pink-500/20 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 left-1/3 w-[450px] h-[300px] bg-amber-400/15 rounded-full blur-[130px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-black uppercase tracking-wider mb-3 border border-purple-500/30">
-              <Crown className="w-4 h-4 text-amber-400" />
-              <span>Conoce a los Anfitriones</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-amber-500/20 text-yellow-300 text-xs font-black uppercase tracking-wider mb-3 border border-yellow-400/40 shadow-lg">
+              <Crown className="w-4 h-4 text-amber-400 animate-bounce-soft" />
+              <span>Conoce a los Anfitriones Oficiales</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
               Los Personajes de PiggyBank
             </h2>
             <p className="text-sm text-slate-300 mt-3 leading-relaxed">
-              Cada personaje cumple un rol fundamental para garantizar diversión, sorteos justos y acreditación directa de premios.
+              Cada personaje cumple un rol fundamental para garantizar diversión, sorteos transparentes y acreditación directa a cuentas con DUI salvadoreño.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Personaje 1: El Rey Cerdito */}
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-amber-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
-              <div className="relative w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 mb-6 group-hover:scale-105 transition-transform">
+            {/* Personaje 1: El Rey Cerdito (Animado) */}
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={playCoinSound}
+              className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-amber-400/60 bg-gradient-to-b from-amber-500/15 via-slate-900 to-slate-950 text-center flex flex-col items-center shadow-2xl shadow-amber-500/20 cursor-pointer group"
+            >
+              <div className="relative w-40 h-40 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-pink-500 to-yellow-300 shadow-2xl shadow-amber-500/50 mb-6 group-hover:scale-110 transition-transform">
+                {/* Aura giratoria */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-500 opacity-60 blur-md animate-spin-slow pointer-events-none" />
                 <img
                   src="/images/piggy-logo.jpg"
                   alt="Rey Piggy Oficial"
-                  className="w-full h-full object-cover rounded-full"
+                  className="relative z-10 w-full h-full object-cover rounded-full"
                 />
+                <div className="absolute -bottom-1 -right-1 z-20 w-8 h-8 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center font-black text-slate-950 text-xs shadow-md">
+                  $
+                </div>
               </div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 shadow-md mb-2">
-                LA MASCOTA OFICIAL
+              <span className="px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 shadow-md mb-2">
+                👑 LA MASCOTA OFICIAL
               </span>
               <h3 className="text-2xl font-black text-white mb-2">El Rey Piggy</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                El guardián de la alcancía dorada. Representa la suerte, la abundancia y el acumulado de cada sala comunitaria.
+                El guardián de la alcancía dorada. Representa la suerte, la abundancia y el acumulado de cada sala comunitaria. ¡Tócalo para escuchar las monedas!
               </p>
-            </div>
+            </motion.div>
 
-            {/* Personaje 2: El Banquero */}
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 bg-gradient-to-b from-purple-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
-              <div className="relative w-36 h-36 rounded-3xl overflow-hidden ring-4 ring-purple-400/50 shadow-xl shadow-purple-500/30 mb-6 group-hover:scale-105 transition-transform">
+            {/* Personaje 2: El Banquero (Animado) */}
+            <motion.div
+              animate={{ y: [-4, 4, -4] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={playCoinSound}
+              className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-purple-400/60 bg-gradient-to-b from-purple-500/15 via-slate-900 to-slate-950 text-center flex flex-col items-center shadow-2xl shadow-purple-500/20 cursor-pointer group"
+            >
+              <div className="relative w-40 h-40 rounded-3xl overflow-hidden ring-4 ring-purple-400/70 shadow-2xl shadow-purple-500/40 mb-6 group-hover:scale-110 transition-transform">
                 <img
                   src="/images/banquero.jpg"
                   alt="El Banquero"
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-emerald-500/90 text-slate-950 text-[10px] font-black shadow-md">
+                  💵 $100s
+                </div>
               </div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-400 text-slate-950 shadow-md mb-2">
-                SEGURIDAD Y PAGOS
+              <span className="px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-purple-400 to-indigo-400 text-slate-950 shadow-md mb-2">
+                🎩 SEGURIDAD Y PAGOS
               </span>
               <h3 className="text-2xl font-black text-white mb-2">El Banquero</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Supervisa la mesa de juego, valida las compras vía Wompi y coordina las transferencias directas a cuentas con DUI verificado.
+                Supervisa la mesa de juego, valida las compras vía Wompi y coordina las transferencias directas a cuentas bancarias con DUI verificado.
               </p>
-            </div>
+            </motion.div>
 
-            {/* Personaje 3: La Presentadora */}
-            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-pink-500/30 bg-gradient-to-b from-pink-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
-              <div className="relative w-36 h-36 rounded-3xl overflow-hidden ring-4 ring-pink-400/50 shadow-xl shadow-pink-500/30 mb-6 group-hover:scale-105 transition-transform">
+            {/* Personaje 3: La Modelo / Presentadora (Animada) */}
+            <motion.div
+              animate={{ y: [-6, 6, -6], rotate: [0, 1, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={playWinSound}
+              className="glass-panel p-6 sm:p-8 rounded-3xl border-2 border-pink-400/70 bg-gradient-to-b from-pink-500/20 via-slate-900 to-slate-950 text-center flex flex-col items-center shadow-2xl shadow-pink-500/30 cursor-pointer group relative overflow-hidden"
+            >
+              {/* Confeti y destellos flotantes */}
+              <span className="absolute top-3 right-4 text-lg animate-pulse">✨</span>
+              <span className="absolute top-10 left-4 text-lg animate-pulse" style={{ animationDelay: '0.8s' }}>🎉</span>
+
+              <div className="relative w-40 h-40 rounded-3xl overflow-hidden ring-4 ring-pink-400/80 shadow-2xl shadow-pink-500/50 mb-6 group-hover:scale-110 transition-transform animate-neon-shift">
                 <img
                   src="/images/premios-host.jpg"
                   alt="Anfitriona de Premios"
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-pink-500/90 text-white text-[10px] font-black shadow-md flex items-center gap-1">
+                  <span>👑</span> ¡PREMIO!
+                </div>
               </div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-400 text-slate-950 shadow-md mb-2">
-                SORTEOS EN VIVO
+              <span className="px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-400 via-rose-400 to-amber-400 text-slate-950 shadow-md mb-2">
+                🎟️ LA MODELO • SORTEOS
               </span>
               <h3 className="text-2xl font-black text-white mb-2">Premios y Sorteos</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Conduce los sorteos de la ruleta, anuncia el boleto ganador en tiempo real y celebra la victoria de los afortunados.
+                Conduce los sorteos en vivo, gira la ruleta y anuncia al afortunado ganador en tiempo real. ¡Tócala para escuchar la fanfarria de premio!
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
