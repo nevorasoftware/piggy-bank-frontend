@@ -37,6 +37,7 @@ export interface Room {
   ticketsSold: number;
   winnerUserId?: string | null;
   winnerTicketId?: string | null;
+  sorteo?: Sorteo | null;
   _count?: {
     tickets: number;
   };

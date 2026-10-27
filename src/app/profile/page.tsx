@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useSocket } from '@/context/SocketContext';
 import { apiRequest } from '@/lib/api';
 import { Ticket, AccountType } from '@/types';
 import DigitalPass from '@/components/rooms/DigitalPass';
@@ -22,6 +23,7 @@ const SALVADORAN_BANKS = [
 
 export default function ProfilePage() {
   const { user, refreshMe } = useAuth();
+  const { socket } = useSocket();
 
   const [bankName, setBankName] = useState('');
   const [accountType, setAccountType] = useState<AccountType>('AHORRO');
@@ -54,6 +56,26 @@ export default function ProfilePage() {
     loadParticipationStatus();
     loadTickets();
   }, [user]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('global:sorteo_winner', () => {
+        loadTickets();
+        loadParticipationStatus();
+      });
+      socket.on('rooms:list_update', () => {
+        loadTickets();
+        loadParticipationStatus();
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('global:sorteo_winner');
+        socket.off('rooms:list_update');
+      }
+    };
+  }, [socket]);
 
   const loadParticipationStatus = async () => {
     try {

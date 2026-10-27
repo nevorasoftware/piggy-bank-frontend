@@ -11,7 +11,7 @@ import CountdownTimer from '@/components/rooms/CountdownTimer';
 import DigitalPass from '@/components/rooms/DigitalPass';
 import SorteoRoulette from '@/components/rooms/SorteoRoulette';
 import PaymentLogos from '@/components/ui/PaymentLogos';
-import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2, Sliders } from 'lucide-react';
+import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2, Sliders, Clock, Trophy, XCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function RoomDetailPage() {
@@ -28,10 +28,12 @@ export default function RoomDetailPage() {
   const [buying, setBuying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [resultModal, setResultModal] = useState<'WINNER' | 'LOSER' | 'SPECTATOR' | null>(null);
   const [winnerData, setWinnerData] = useState<{
     ticketGanador?: string;
     ganadorNombre?: string;
     premio?: number;
+    winnerUserId?: string;
   } | null>(null);
 
   // 1. Cargar detalles de la sala y boleto del usuario si existe
@@ -48,6 +50,7 @@ export default function RoomDetailPage() {
             ticketGanador: res.room.winnerTicketId || 'TKT-GANADOR',
             ganadorNombre: res.room.sorteo.ganador?.fullName || 'Ganador',
             premio: Number(res.room.premio),
+            winnerUserId: res.room.winnerUserId || res.room.sorteo.ganadorUserId,
           });
         }
       }
@@ -72,6 +75,26 @@ export default function RoomDetailPage() {
     }
   };
 
+  const handleSpinEnd = () => {
+    setIsDrawing(false);
+    fetchRoomData();
+    fetchMyPass();
+
+    if (winnerData) {
+      const isWinner =
+        (myTicket && myTicket.ticketNumber === winnerData.ticketGanador) ||
+        (user && user.id === winnerData.winnerUserId);
+
+      if (isWinner) {
+        setResultModal('WINNER');
+      } else if (myTicket) {
+        setResultModal('LOSER');
+      } else {
+        setResultModal('SPECTATOR');
+      }
+    }
+  };
+
   useEffect(() => {
     if (roomId) {
       fetchRoomData();
@@ -90,19 +113,20 @@ export default function RoomDetailPage() {
       socket.on('sorteo:iniciar', (data: any) => {
         if (data.roomId === roomId) {
           setIsDrawing(true);
+          setResultModal(null);
         }
       });
 
       socket.on('sorteo:ganador', (data: any) => {
         if (data.roomId === roomId) {
-          setIsDrawing(false);
           setWinnerData({
             ticketGanador: data.ticketGanador,
             ganadorNombre: data.ganadorNombre,
             premio: data.premio,
+            winnerUserId: data.winnerUserId,
           });
-          fetchRoomData();
-          fetchMyPass();
+          // Mantener isDrawing en true para permitir que la ruleta gire los 5 segundos completos
+          setIsDrawing(true);
         }
       });
     }
@@ -117,7 +141,7 @@ export default function RoomDetailPage() {
         socket.off('sorteo:ganador');
       }
     };
-  }, [roomId, socket, user]);
+  }, [roomId, socket, user, myTicket]);
 
   // Detectar si el usuario retorna desde la pasarela de Wompi con ?status=success&ref=...
   useEffect(() => {
@@ -241,7 +265,7 @@ export default function RoomDetailPage() {
             isSpinning={isDrawing}
             winnerTicket={winnerData?.ticketGanador || room.winnerTicketId}
             winnerName={winnerData?.ganadorNombre}
-            onSpinEnd={() => setIsDrawing(false)}
+            onSpinEnd={handleSpinEnd}
           />
         </div>
       )}
@@ -275,9 +299,17 @@ export default function RoomDetailPage() {
           <div className="mt-8 w-full border-t border-white/5 pt-6">
             <CountdownTimer
               targetDate={room.horaSorteo}
-              onFinish={() => {
+              onFinish={async () => {
                 if (room.estado === 'ABIERTA' || room.estado === 'LLENA') {
+                  try {
+                    await apiRequest(`/api/rooms/${roomId}/draw-if-ready`, {
+                      method: 'POST',
+                    });
+                  } catch (e) {
+                    console.error('Error auto-iniciando sorteo:', e);
+                  }
                   fetchRoomData();
+                  fetchMyPass();
                 }
               }}
             />
@@ -444,6 +476,127 @@ export default function RoomDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Modal de Resultado de Sorteo (Ganador o Perdedor) */}
+      {resultModal && winnerData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className={`relative w-full max-w-lg rounded-3xl p-8 border text-center shadow-2xl overflow-hidden ${
+            resultModal === 'WINNER'
+              ? 'bg-gradient-to-b from-slate-900 via-amber-950/40 to-slate-950 border-amber-400 shadow-amber-500/30'
+              : 'bg-gradient-to-b from-slate-900 via-rose-950/30 to-slate-950 border-rose-500/40 shadow-rose-500/20'
+          }`}>
+            {resultModal === 'WINNER' ? (
+              <div className="space-y-4">
+                <div className="w-20 h-20 mx-auto rounded-3xl bg-yellow-400/20 border-2 border-yellow-400 flex items-center justify-center text-5xl shadow-xl shadow-yellow-400/30 animate-bounce">
+                  🏆
+                </div>
+                <span className="px-4 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 uppercase tracking-widest inline-block shadow-lg">
+                  ¡TENEMOS UN GANADOR!
+                </span>
+                <h2 className="text-3xl font-black text-white">¡Felicidades, Eres el Ganador!</h2>
+                <p className="text-sm text-slate-300">
+                  Tu boleto <strong className="text-amber-400 font-mono text-base">#{winnerData.ticketGanador}</strong> resultó premiado en <strong className="text-white">{room.nombre}</strong>.
+                </p>
+
+                <div className="p-5 rounded-2xl bg-slate-950 border border-amber-500/40 my-4">
+                  <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider block">Premio Acumulado</span>
+                  <span className="text-4xl font-black text-gold-gradient font-mono">
+                    ${Number(winnerData.premio || room.premio).toFixed(2)} USD
+                  </span>
+                  <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-amber-300 font-semibold bg-amber-500/10 py-1.5 px-3 rounded-full border border-amber-500/20">
+                    <Clock className="w-3.5 h-3.5 animate-spin" />
+                    Transferencia bancaria en proceso de acreditación
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link
+                    href="/profile"
+                    className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-500/20"
+                  >
+                    Ver mi Pase en el Perfil
+                  </Link>
+                  <button
+                    onClick={() => setResultModal(null)}
+                    className="px-6 py-3.5 rounded-xl glass-panel border border-white/10 text-white font-bold text-xs hover:bg-white/5 transition-all"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            ) : resultModal === 'LOSER' ? (
+              <div className="space-y-4">
+                <div className="w-20 h-20 mx-auto rounded-3xl bg-rose-500/20 border-2 border-rose-500/40 flex items-center justify-center text-4xl shadow-xl shadow-rose-500/20">
+                  🐷
+                </div>
+                <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase tracking-widest inline-block">
+                  Sorteo Finalizado
+                </span>
+                <h2 className="text-2xl font-black text-white">¡Gracias por Participar!</h2>
+                <p className="text-sm text-slate-300">
+                  El sorteo de <strong className="text-white">{room.nombre}</strong> ha concluido.
+                </p>
+
+                <div className="p-4 rounded-2xl bg-slate-950 border border-white/10 my-4 text-xs space-y-2 text-slate-300">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-slate-400">Boleto Ganador:</span>
+                    <span className="font-mono font-bold text-amber-400">#{winnerData.ticketGanador}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-slate-400">Ganador Adjudicado:</span>
+                    <span className="font-bold text-white">{winnerData.ganadorNombre || 'Jugador'}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400">Tu Boleto:</span>
+                    <span className="font-mono text-rose-400">#{myTicket?.ticketNumber} (Finalizado)</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-400">
+                  ¡No te rindas! Sigue participando en las salas activas de la comunidad.
+                </p>
+
+                <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link
+                    href="/"
+                    className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-lg"
+                  >
+                    Explorar Nuevas Salas
+                  </Link>
+                  <button
+                    onClick={() => setResultModal(null)}
+                    className="px-6 py-3.5 rounded-xl glass-panel border border-white/10 text-white font-bold text-xs hover:bg-white/5 transition-all"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-3xl">
+                  🎉
+                </div>
+                <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest inline-block">
+                  Sorteo Concluido
+                </span>
+                <h2 className="text-2xl font-black text-white">¡Tenemos un Ganador!</h2>
+                <p className="text-xs text-slate-300">
+                  El boleto <strong className="text-amber-400 font-mono">#{winnerData.ticketGanador}</strong> perteneciente a <strong className="text-white">{winnerData.ganadorNombre}</strong> ha ganado el premio de ${Number(winnerData.premio || room.premio).toFixed(2)} USD.
+                </p>
+
+                <div className="pt-2 flex justify-center">
+                  <button
+                    onClick={() => setResultModal(null)}
+                    className="px-6 py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs"
+                  >
+                    Entendido
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

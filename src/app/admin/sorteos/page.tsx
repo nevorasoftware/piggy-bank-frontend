@@ -48,7 +48,7 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} por WhatsApp.`,
+          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} por Correo Electrónico y WhatsApp.`,
         });
         loadSorteos();
       } else {
