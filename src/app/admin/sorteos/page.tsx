@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '@/lib/api';
 import { Sorteo } from '@/types';
-import { Trophy, CheckCircle, Clock, Building2, Phone, Sparkles, AlertCircle, Send } from 'lucide-react';
+import { Trophy, CheckCircle, Clock, Building2, Phone, Sparkles, AlertCircle, Send, Mail } from 'lucide-react';
 
 export default function AdminSorteosPage() {
   const [sorteos, setSorteos] = useState<Sorteo[]>([]);
   const [loading, setLoading] = useState(true);
   const [payingId, setPayingId] = useState<string | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} por Correo Electrónico y WhatsApp.`,
+          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} y administración por Correo Electrónico.`,
         });
         loadSorteos();
       } else {
@@ -58,6 +59,30 @@ export default function AdminSorteosPage() {
       setMessage({ type: 'error', text: err.message || 'Error en la petición de pago.' });
     } finally {
       setPayingId(null);
+    }
+  };
+
+  const handleResendPayoutEmail = async (sorteoId: string, winnerName: string) => {
+    setResendingId(sorteoId);
+    setMessage(null);
+
+    try {
+      const res = await apiRequest(`/api/admin/sorteos/${sorteoId}/resend-payout-email`, {
+        method: 'POST',
+      });
+
+      if (res.success) {
+        setMessage({
+          type: 'success',
+          text: `¡Correo de confirmación de pago reenviado exitosamente a ${winnerName} y administración!`,
+        });
+      } else {
+        setMessage({ type: 'error', text: res.message || 'Error al reenviar correo de pago.' });
+      }
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Error al reenviar correo de confirmación.' });
+    } finally {
+      setResendingId(null);
     }
   };
 
@@ -173,9 +198,25 @@ export default function AdminSorteosPage() {
                       </td>
                       <td className="py-4 px-6 text-right">
                         {isPaid ? (
-                          <span className="text-[10px] text-slate-500 font-mono">
-                            Pagado el {new Date(s.fechaPago!).toLocaleDateString('es-SV')}
-                          </span>
+                          <div className="flex flex-col items-end gap-1.5">
+                            <span className="text-[10px] text-emerald-400 font-mono font-semibold">
+                              ✓ Pagado el {new Date(s.fechaPago!).toLocaleDateString('es-SV')}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleResendPayoutEmail(
+                                  s.id,
+                                  s.ganador?.fullName || 'Ganador'
+                                )
+                              }
+                              disabled={resendingId === s.id}
+                              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-slate-800 text-[11px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                              title="Reenviar comprobante por correo al ganador y a la administración"
+                            >
+                              <Mail className="w-3 h-3 text-amber-400" />
+                              {resendingId === s.id ? 'Enviando correo...' : 'Reenviar Correo'}
+                            </button>
+                          </div>
                         ) : (
                           <button
                             onClick={() =>
