@@ -4,9 +4,24 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import DuiInput from '@/components/auth/DuiInput';
+import TopCasinoBar from '@/components/casino/TopCasinoBar';
 import { apiRequest } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Sparkles, Phone, Mail, User, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { playCoinSound, playClickSound } from '@/lib/sound';
+import {
+  Sparkles,
+  Phone,
+  Mail,
+  User,
+  Lock,
+  AlertCircle,
+  ArrowRight,
+  ShieldCheck,
+  Trophy,
+  Crown,
+  Gift,
+  CheckCircle2,
+} from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -42,6 +57,7 @@ export default function RegisterPage() {
       return;
     }
 
+    playCoinSound();
     setLoading(true);
 
     try {
@@ -81,145 +97,272 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md rounded-3xl glass-panel border border-white/10 p-8 shadow-2xl shadow-amber-500/5">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 mx-auto mb-4">
-            <img
-              src="/images/piggy-logo.jpg"
-              alt="PiggyBank Logo"
-              className="w-full h-full object-cover rounded-full"
-            />
+    <div className="flex-1 flex flex-col bg-[#070A12] text-slate-100 min-h-screen">
+      {/* ======================================================== */}
+      {/* 1. BARRA SUPERIOR DE CASINO MÓVIL ESTILO GENIUSBET PIGGY TAP */}
+      {/* ======================================================== */}
+      <TopCasinoBar
+        title="Registro de Jugador • Piggy Bank"
+        showBack={true}
+        backHref="/"
+      />
+
+      {/* Luces y resplandores neón de fondo */}
+      <div className="relative flex-1 flex items-center justify-center py-10 lg:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[400px] bg-purple-600/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[350px] bg-amber-500/15 rounded-full blur-[140px] pointer-events-none" />
+
+        <div className="w-full max-w-5xl relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            {/* ======================================================== */}
+            {/* COLUMNA IZQUIERDA: BIENVENIDA VIP Y PERSONAJES OFICIALES */}
+            {/* ======================================================== */}
+            <div className="lg:col-span-5 text-center lg:text-left space-y-6">
+              {/* Badge Oficial */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/40 text-amber-300 text-xs font-black uppercase tracking-wider shadow-md">
+                <Crown className="w-4 h-4 text-amber-400 animate-bounce-soft" />
+                <span>Registro VIP • El Salvador</span>
+              </div>
+
+              {/* Título Principal */}
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                ¡Entra a la Mesa y <br />
+                <span className="text-gold-gradient drop-shadow-[0_2px_15px_rgba(250,204,21,0.5)]">
+                  Juega por Efectivo!
+                </span>
+              </h1>
+
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Crea tu perfil de jugador con tu DUI salvadoreño. Participa en sorteos comunitarios cada 2 horas y recibe tus pagos directamente en tu cuenta bancaria.
+              </p>
+
+              {/* Tarjeta de los Personajes */}
+              <div className="relative rounded-3xl overflow-hidden glass-panel border-2 border-amber-400/40 p-4 sm:p-5 bg-gradient-to-b from-purple-950/40 via-slate-900 to-slate-950 shadow-2xl">
+                <div className="flex items-center gap-4">
+                  {/* Avatar Presentadora */}
+                  <div className="w-16 h-20 sm:w-20 sm:h-24 rounded-2xl overflow-hidden ring-2 ring-pink-400/50 shadow-lg shrink-0">
+                    <img
+                      src="/images/premios-host.jpg"
+                      alt="Anfitriona ¡Premio!"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Avatar Rey Piggy */}
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 shrink-0">
+                    <img
+                      src="/images/piggy-logo.jpg"
+                      alt="Rey Piggy"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+
+                  {/* Texto de Garantía */}
+                  <div className="text-left">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 inline-block mb-1">
+                      ANFITRIONES
+                    </span>
+                    <h4 className="text-sm font-black text-white">Sorteos Certificados</h4>
+                    <p className="text-[11px] text-slate-300 mt-0.5">
+                      Transparencia total y entrega a nombre del titular registrado.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Beneficios Rápidos */}
+                <div className="mt-4 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[11px] text-slate-300 font-semibold text-left">
+                  <div className="flex items-center gap-1.5 text-emerald-400">
+                    <ShieldCheck className="w-4 h-4 shrink-0" />
+                    <span>DUI Verificado</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-amber-300">
+                    <Trophy className="w-4 h-4 shrink-0" />
+                    <span>Máx. 3 Victorias / 24h</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-purple-300">
+                    <Sparkles className="w-4 h-4 shrink-0" />
+                    <span>Sin Límite de Pases</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-sky-300">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>Mayores de 18 Años</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ======================================================== */}
+            {/* COLUMNA DERECHA: CONSOLA ARCADE DE REGISTRO */}
+            {/* ======================================================== */}
+            <div className="lg:col-span-7">
+              <div className="rounded-3xl glass-panel border-2 border-amber-400/50 p-6 sm:p-8 shadow-2xl shadow-amber-500/10 bg-slate-950/90 relative overflow-hidden">
+                {/* Cinta de brillo en cabecera */}
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500" />
+
+                {/* Encabezado del Formulario */}
+                <div className="text-center sm:text-left mb-6 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
+                  <div>
+                    <h2 className="text-2xl font-black text-white flex items-center gap-2 justify-center sm:justify-start">
+                      <span>Crear Cuenta de Jugador</span>
+                      <span className="text-amber-400 text-lg">🎰</span>
+                    </h2>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Ingresa tus datos oficiales para acreditar tus premios
+                    </p>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 to-purple-500 shadow-lg shadow-amber-500/20 shrink-0">
+                    <img
+                      src="/images/piggy-logo.jpg"
+                      alt="Piggy Logo"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Mensaje de Error */}
+                {error && (
+                  <div className="mb-5 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block font-bold">Verificación de Registro:</strong>
+                      <span className="mt-0.5 block">{error}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Formulario */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Nombre Completo */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-amber-400" />
+                      Nombre Completo (Como aparece en tu DUI)
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Juan Carlos Pérez Rodríguez"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm transition-all"
+                    />
+                  </div>
+
+                  {/* DUI Salvadoreño con Validador */}
+                  <DuiInput
+                    value={dui}
+                    onChange={(val, isValid) => {
+                      setDui(val);
+                      setIsDuiValid(isValid);
+                    }}
+                  />
+
+                  {/* Teléfono Salvadoreño */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-amber-400" />
+                      Teléfono Celular (WhatsApp para OTP)
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+503 7123-4567"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm font-mono transition-all"
+                    />
+                    <span className="text-[10px] text-slate-400 mt-1 block">
+                      Recibirás aquí tu código de seguridad OTP y notificaciones de boletos
+                    </span>
+                  </div>
+
+                  {/* Correo Electrónico */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-amber-400" />
+                      Correo Electrónico
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="tu@correo.com"
+                      className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm transition-all"
+                    />
+                  </div>
+
+                  {/* Grid de Contraseñas */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-amber-400" />
+                        Contraseña
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-amber-400" />
+                        Confirmar Contraseña
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* BOTÓN ARCADE 3D DE REGISTRO */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-4 rounded-2xl bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-500 border-b-4 border-amber-600 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wider shadow-2xl shadow-amber-500/40 hover:brightness-110 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 group"
+                    >
+                      {loading ? (
+                        <span>Registrando y generando OTP...</span>
+                      ) : (
+                        <>
+                          <Sparkles className="w-5 h-5 text-slate-950 group-hover:rotate-12 transition-transform" />
+                          <span>¡REGISTRARME Y EMPEZAR A JUGAR!</span>
+                          <ArrowRight className="w-5 h-5 text-slate-950 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                {/* Footer del Formulario */}
+                <div className="mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 text-center sm:text-left">
+                  <span>¿Ya tienes una cuenta registrada?</span>
+                  <Link
+                    href="/auth/login"
+                    onClick={playClickSound}
+                    className="font-bold text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1"
+                  >
+                    <span>Iniciar Sesión</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
-          <h1 className="text-2xl font-black text-white">Crear Cuenta en PiggyBank</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Validación oficial con DUI salvadoreño y pagos seguros
-          </p>
         </div>
-
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nombre Completo */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-amber-400" />
-              Nombre Completo
-            </label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Juan Carlos Pérez Rodríguez"
-              className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 text-sm"
-            />
-          </div>
-
-          {/* DUI Salvadoreño con Validador */}
-          <DuiInput
-            value={dui}
-            onChange={(val, isValid) => {
-              setDui(val);
-              setIsDuiValid(isValid);
-            }}
-          />
-
-          {/* Teléfono Salvadoreño */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-amber-400" />
-              Teléfono Celular (WhatsApp)
-            </label>
-            <input
-              type="tel"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+503 7123-4567"
-              className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 text-sm font-mono"
-            />
-            <span className="text-[10px] text-slate-500 mt-1 block">
-              Recibirás aquí tu código OTP y tus pases de sorteo
-            </span>
-          </div>
-
-          {/* Correo Electrónico */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-amber-400" />
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu@correo.com"
-              className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 text-sm"
-            />
-          </div>
-
-          {/* Contraseña */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-amber-400" />
-              Contraseña
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 text-sm"
-            />
-          </div>
-
-          {/* Confirmar Contraseña */}
-          <div>
-            <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-amber-400" />
-              Confirmar Contraseña
-            </label>
-            <input
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 bg-slate-900 border border-white/10 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-amber-400 text-sm"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-6 disabled:opacity-50"
-          >
-            {loading ? (
-              <span>Registrando y generando OTP...</span>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                Registrarme en PiggyBank
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </form>
-
-        <p className="text-center text-xs text-slate-400 mt-6">
-          ¿Ya tienes cuenta?{' '}
-          <Link href="/auth/login" className="font-bold text-amber-400 hover:underline">
-            Iniciar Sesión
-          </Link>
-        </p>
       </div>
     </div>
   );
