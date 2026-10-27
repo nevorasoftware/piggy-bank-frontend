@@ -10,6 +10,7 @@ export default function AdminSorteosPage() {
   const [loading, setLoading] = useState(true);
   const [payingId, setPayingId] = useState<string | null>(null);
   const [resendingId, setResendingId] = useState<string | null>(null);
+  const [resendingWinnerId, setResendingWinnerId] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} a su correo registrado.`,
+          text: res.message || `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} a su correo registrado.`,
         });
         loadSorteos();
       } else {
@@ -62,7 +63,7 @@ export default function AdminSorteosPage() {
     }
   };
 
-  const handleResendPayoutEmail = async (sorteoId: string, winnerName: string) => {
+  const handleResendPayoutEmail = async (sorteoId: string, winnerName: string, winnerEmail?: string) => {
     setResendingId(sorteoId);
     setMessage(null);
 
@@ -74,15 +75,39 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Correo de confirmación de pago reenviado exitosamente a ${winnerName} a su correo registrado!`,
+          text: res.message || `¡Comprobante de pago reenviado exitosamente a ${winnerName} (${winnerEmail || 'correo registrado'})!`,
         });
       } else {
-        setMessage({ type: 'error', text: res.message || 'Error al reenviar correo de pago.' });
+        setMessage({ type: 'error', text: res.message || 'Error al reenviar comprobante de pago.' });
       }
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Error al reenviar correo de confirmación.' });
+      setMessage({ type: 'error', text: err.message || 'Error al reenviar comprobante de pago.' });
     } finally {
       setResendingId(null);
+    }
+  };
+
+  const handleResendWinnerEmail = async (sorteoId: string, winnerName: string, winnerEmail?: string) => {
+    setResendingWinnerId(sorteoId);
+    setMessage(null);
+
+    try {
+      const res = await apiRequest(`/api/admin/sorteos/${sorteoId}/resend-winner-email`, {
+        method: 'POST',
+      });
+
+      if (res.success) {
+        setMessage({
+          type: 'success',
+          text: res.message || `¡Notificación oficial de ganador reenviada exitosamente a ${winnerName} (${winnerEmail || 'correo registrado'})!`,
+        });
+      } else {
+        setMessage({ type: 'error', text: res.message || 'Error al reenviar notificación de ganador.' });
+      }
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Error al reenviar notificación de ganador.' });
+    } finally {
+      setResendingWinnerId(null);
     }
   };
 
@@ -94,7 +119,7 @@ export default function AdminSorteosPage() {
         </span>
         <h1 className="text-3xl font-black text-white">Historial de Sorteos y Ganadores</h1>
         <p className="text-xs text-slate-400 mt-1">
-          Supervisa los sorteos finalizados, verifica los datos bancarios y confirma las transferencias con el botón de "Pago Aplicado".
+          Supervisa los sorteos finalizados, verifica los correos y cuentas registradas en la base de datos, y reenvía notificaciones vía Gmail API.
         </p>
       </div>
 
@@ -121,12 +146,12 @@ export default function AdminSorteosPage() {
             <thead className="bg-white/5 border-b border-white/10 text-slate-400 font-bold uppercase tracking-wider">
               <tr>
                 <th className="py-4 px-6">Sala</th>
-                <th className="py-4 px-4">Ganador</th>
+                <th className="py-4 px-4">Ganador & Correo Registrado</th>
                 <th className="py-4 px-4">Premio</th>
                 <th className="py-4 px-4">Cuenta Destino</th>
                 <th className="py-4 px-4">Fecha Sorteo</th>
                 <th className="py-4 px-4">Estado del Pago</th>
-                <th className="py-4 px-6 text-right">Acción</th>
+                <th className="py-4 px-6 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-slate-300 font-medium">
@@ -146,6 +171,7 @@ export default function AdminSorteosPage() {
                 sorteos.map((s) => {
                   const isPaid = s.estadoPago === 'PAGADO';
                   const bank = s.ganador?.bankAccount;
+                  const winnerEmail = s.ganador?.email;
 
                   return (
                     <tr key={s.id} className="hover:bg-white/5 transition-colors">
@@ -153,9 +179,13 @@ export default function AdminSorteosPage() {
                         {s.room?.nombre || 'Sala'}
                       </td>
                       <td className="py-4 px-4">
-                        <p className="font-bold text-white">{s.ganador?.fullName}</p>
-                        <p className="text-[10px] text-amber-400 font-mono">DUI: {s.ganador?.dui}</p>
-                        <p className="text-[10px] text-slate-500">{s.ganador?.phone}</p>
+                        <p className="font-bold text-white">{s.ganador?.fullName || 'Usuario Ganador'}</p>
+                        <p className="text-[11px] text-emerald-400 font-mono font-medium flex items-center gap-1 mt-0.5" title="Correo registrado en la base de datos">
+                          <Mail className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                          {winnerEmail || 'Sin correo registrado'}
+                        </p>
+                        <p className="text-[10px] text-amber-400 font-mono mt-0.5">DUI: {s.ganador?.dui || 'N/D'}</p>
+                        <p className="text-[10px] text-slate-500">{s.ganador?.phone || 'N/D'}</p>
                       </td>
                       <td className="py-4 px-4 font-mono font-black text-emerald-400 text-sm">
                         ${Number(s.montoPremio).toFixed(2)} USD
@@ -202,36 +232,71 @@ export default function AdminSorteosPage() {
                             <span className="text-[10px] text-emerald-400 font-mono font-semibold">
                               ✓ Pagado el {new Date(s.fechaPago!).toLocaleDateString('es-SV')}
                             </span>
-                            <button
-                              onClick={() =>
-                                handleResendPayoutEmail(
-                                  s.id,
-                                  s.ganador?.fullName || 'Ganador'
-                                )
-                              }
-                              disabled={resendingId === s.id}
-                              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-slate-800 text-[11px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
-                              title="Reenviar comprobante por correo al ganador y a la administración"
-                            >
-                              <Mail className="w-3 h-3 text-amber-400" />
-                              {resendingId === s.id ? 'Enviando correo...' : 'Reenviar Correo'}
-                            </button>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() =>
+                                  handleResendPayoutEmail(
+                                    s.id,
+                                    s.ganador?.fullName || 'Ganador',
+                                    winnerEmail
+                                  )
+                                }
+                                disabled={resendingId === s.id}
+                                className="px-2.5 py-1 rounded-lg bg-slate-900 border border-emerald-500/30 text-emerald-300 hover:text-emerald-200 hover:bg-slate-800 text-[11px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                                title={`Reenviar comprobante de transferencia a ${winnerEmail || 'correo registrado'}`}
+                              >
+                                <Mail className="w-3 h-3 text-emerald-400" />
+                                {resendingId === s.id ? 'Enviando...' : 'Reenviar Comprobante'}
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleResendWinnerEmail(
+                                    s.id,
+                                    s.ganador?.fullName || 'Ganador',
+                                    winnerEmail
+                                  )
+                                }
+                                disabled={resendingWinnerId === s.id}
+                                className="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-slate-800 text-[11px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                                title={`Reenviar notificación oficial de ganador a ${winnerEmail || 'correo registrado'}`}
+                              >
+                                <Trophy className="w-3 h-3 text-amber-400" />
+                                {resendingWinnerId === s.id ? 'Enviando...' : 'Aviso Ganador'}
+                              </button>
+                            </div>
                           </div>
                         ) : (
-                          <button
-                            onClick={() =>
-                              handleApplyPayout(
-                                s.id,
-                                s.ganador?.fullName || 'Ganador',
-                                Number(s.montoPremio)
-                              )
-                            }
-                            disabled={payingId === s.id}
-                            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 ml-auto disabled:opacity-50"
-                          >
-                            <Send className="w-3.5 h-3.5" />
-                            {payingId === s.id ? 'Aplicando...' : 'Pago Aplicado'}
-                          </button>
+                          <div className="flex flex-col items-end gap-1.5">
+                            <button
+                              onClick={() =>
+                                handleApplyPayout(
+                                  s.id,
+                                  s.ganador?.fullName || 'Ganador',
+                                  Number(s.montoPremio)
+                                )
+                              }
+                              disabled={payingId === s.id}
+                              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 ml-auto disabled:opacity-50"
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              {payingId === s.id ? 'Aplicando...' : 'Pago Aplicado'}
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleResendWinnerEmail(
+                                  s.id,
+                                  s.ganador?.fullName || 'Ganador',
+                                  winnerEmail
+                                )
+                              }
+                              disabled={resendingWinnerId === s.id}
+                              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300 hover:text-amber-200 hover:bg-slate-800 text-[11px] font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                              title={`Reenviar aviso oficial de ganador por correo a ${winnerEmail || 'correo registrado'}`}
+                            >
+                              <Mail className="w-3 h-3 text-amber-400" />
+                              {resendingWinnerId === s.id ? 'Enviando aviso...' : 'Reenviar Aviso Ganador'}
+                            </button>
+                          </div>
                         )}
                       </td>
                     </tr>
