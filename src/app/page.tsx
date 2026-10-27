@@ -198,6 +198,32 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* BANNER LEGAL Y JUEGO RESPONSABLE */}
+      <section className="py-12 border-t border-white/5 bg-gradient-to-b from-slate-950/60 to-slate-950">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900/90 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
+                <span>⚖️ Marco Legal y Transparencia • El Salvador</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white">
+                Sorteos Seguros, Verificables y Confiables
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                Operamos bajo estrictos estándares de juego responsable (+18), pasarela bancaria autorizada Wompi (Banco Agrícola) y protección al usuario en El Salvador.
+              </p>
+            </div>
+            <Link
+              href="/terms"
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-black text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-500/20 shrink-0 flex items-center gap-2"
+            >
+              Leer Términos y Condiciones
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
