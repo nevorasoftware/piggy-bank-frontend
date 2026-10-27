@@ -66,7 +66,8 @@ export default function RegisterPage() {
         if (res.token && res.user) {
           login(res.token, res.user);
         }
-        // Guardar teléfono para verificar en la siguiente pantalla
+        // Guardar correo y teléfono para verificar en la siguiente pantalla
+        sessionStorage.setItem('verify_email', email);
         sessionStorage.setItem('verify_phone', cleanPhone);
         router.push('/auth/verify');
       } else {
