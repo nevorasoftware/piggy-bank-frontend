@@ -11,7 +11,7 @@ import CountdownTimer from '@/components/rooms/CountdownTimer';
 import DigitalPass from '@/components/rooms/DigitalPass';
 import SorteoRoulette from '@/components/rooms/SorteoRoulette';
 import PaymentLogos from '@/components/ui/PaymentLogos';
-import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2, Sliders } from 'lucide-react';
 import Link from 'next/link';
 
 export default function RoomDetailPage() {
@@ -123,6 +123,11 @@ export default function RoomDetailPage() {
   const handleBuyTicket = async () => {
     if (!user) {
       router.push('/auth/login');
+      return;
+    }
+
+    if (user.role === 'ADMIN') {
+      setError('Los administradores no pueden adquirir pases ni participar en sorteos. Tu rol es exclusivo para gestión de salas y pagos.');
       return;
     }
 
@@ -270,8 +275,62 @@ export default function RoomDetailPage() {
             </div>
           )}
 
-          {/* Si el usuario ya posee un boleto activo en esta sala */}
-          {myTicket ? (
+          {/* Si el usuario es Administrador */}
+          {user?.role === 'ADMIN' ? (
+            <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-purple-500/30 bg-purple-950/20 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 block mb-0.5">
+                    Modo Administrador
+                  </span>
+                  <h3 className="text-xl font-black text-white">Gestión y Control de Sala</h3>
+                  <p className="text-xs text-slate-400">
+                    Los administradores no adquieren pases ni participan en los sorteos.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-900/80 border border-white/5 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Estado de la Sala:</span>
+                  <span className="font-bold uppercase text-purple-400 bg-purple-500/10 px-2.5 py-0.5 rounded-full border border-purple-500/20">
+                    {room.estado}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Boletos Emitidos:</span>
+                  <span className="font-mono font-bold text-white">
+                    {room.ticketsSold} de {room.capacidadMax} cupos
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Duración Parametrizada:</span>
+                  <span className="font-mono font-bold text-amber-400">
+                    {room.duracionHoras || 2} hora(s)
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Hora del Sorteo:</span>
+                  <span className="font-mono text-slate-300">
+                    {new Date(room.horaSorteo).toLocaleTimeString('es-SV', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Link
+                  href="/admin/rooms"
+                  className="w-full py-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <Sliders className="w-4 h-4" />
+                  <span>Gestionar o Iniciar Sala en Panel de Administración</span>
+                </Link>
+              </div>
+            </div>
+          ) : myTicket ? (
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />

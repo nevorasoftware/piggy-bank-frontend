@@ -30,6 +30,7 @@ export interface Room {
   premio: number;
   costoPase: number;
   capacidadMax: number;
+  duracionHoras?: number;
   horaApertura: string;
   horaSorteo: string;
   estado: RoomStatus;
