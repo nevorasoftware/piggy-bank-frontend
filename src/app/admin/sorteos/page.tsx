@@ -49,7 +49,7 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} y administración por Correo Electrónico.`,
+          text: `¡Pago de $${Number(amount).toFixed(2)} USD aplicado exitosamente! Se notificó a ${winnerName} a su correo registrado.`,
         });
         loadSorteos();
       } else {
@@ -74,7 +74,7 @@ export default function AdminSorteosPage() {
       if (res.success) {
         setMessage({
           type: 'success',
-          text: `¡Correo de confirmación de pago reenviado exitosamente a ${winnerName} y administración!`,
+          text: `¡Correo de confirmación de pago reenviado exitosamente a ${winnerName} a su correo registrado!`,
         });
       } else {
         setMessage({ type: 'error', text: res.message || 'Error al reenviar correo de pago.' });
