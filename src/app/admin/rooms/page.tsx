@@ -391,7 +391,7 @@ export default function AdminRoomsPage() {
                   <input
                     type="number"
                     step="0.01"
-                    min="1"
+                    min="0.01"
                     required
                     value={premio}
                     onChange={(e) => setPremio(e.target.value)}
@@ -404,11 +404,11 @@ export default function AdminRoomsPage() {
                   <input
                     type="number"
                     step="0.01"
-                    min="0.25"
+                    min="0.01"
                     required
                     value={costoPase}
                     onChange={(e) => setCostoPase(e.target.value)}
-                    placeholder="2.50"
+                    placeholder="1.00"
                     className="w-full px-4 py-2.5 bg-slate-900 border border-white/10 rounded-xl text-white text-xs font-mono focus:outline-none focus:border-purple-400"
                   />
                 </div>
