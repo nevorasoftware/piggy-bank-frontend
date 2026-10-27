@@ -49,8 +49,12 @@ export default function LoginPage() {
     <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md rounded-3xl glass-panel border border-white/10 p-8 shadow-2xl shadow-amber-500/5">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-3xl mx-auto mb-4">
-            🐷
+          <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 mx-auto mb-4">
+            <img
+              src="/images/piggy-logo.jpg"
+              alt="PiggyBank Logo"
+              className="w-full h-full object-cover rounded-full"
+            />
           </div>
           <h1 className="text-2xl font-black text-white">Bienvenido de Vuelta</h1>
           <p className="text-xs text-slate-400 mt-1">

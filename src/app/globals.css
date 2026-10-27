@@ -164,3 +164,17 @@ select,
 ::-webkit-scrollbar-thumb:hover {
   background: #facc15;
 }
+
+@keyframes bounceSoft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-soft {
+  animation: bounceSoft 2.5s ease-in-out infinite;
+}
+

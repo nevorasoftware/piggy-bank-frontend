@@ -7,14 +7,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           {/* Columna 1: Marca e info */}
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">🐷</span>
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src="/images/piggy-logo.jpg"
+                alt="PiggyBank Logo"
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-amber-400/50 shadow-md shadow-amber-500/20"
+              />
               <span className="text-xl font-black text-white">
                 Piggy<span className="text-amber-400">Bank</span> <span className="text-xs px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">SV</span>
               </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed mb-4">
-              Plataforma digital de salas de sorteos comunitarios y premios instantáneos en efectivo en la República de El Salvador. Transparencia algorítmica verificable y pagos directos.
+              Plataforma digital de salas de sorteos comunitarios y premios instantáneos en efectivo en la República de El Salvador. Transparencia algorítmica verificable y entrega directa por transferencia bancaria.
             </p>
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-black bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-lg">
@@ -81,10 +85,10 @@ export default function Footer() {
           <div className="space-y-3">
             <h4 className="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
               <HeartHandshake className="w-4 h-4 text-amber-400" />
-              Juego Responsable
+              Juego Responsable & Entrega
             </h4>
             <p className="text-xs leading-relaxed text-slate-400">
-              Juega con moderación. El servicio cuenta con un límite de seguridad diario de 6 participaciones y 3 premios por usuario.
+              Entrega directa a cuenta bancaria a nombre del titular del DUI registrado. Límite diario de victorias: máx. 3 premios cada 24 horas.
             </p>
             <div className="pt-1">
               <a

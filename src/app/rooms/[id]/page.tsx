@@ -11,6 +11,8 @@ import CountdownTimer from '@/components/rooms/CountdownTimer';
 import DigitalPass from '@/components/rooms/DigitalPass';
 import SorteoRoulette from '@/components/rooms/SorteoRoulette';
 import PaymentLogos from '@/components/ui/PaymentLogos';
+import TopCasinoBar from '@/components/casino/TopCasinoBar';
+import JackpotHeader from '@/components/casino/JackpotHeader';
 import { Sparkles, CreditCard, ShieldCheck, AlertCircle, ArrowLeft, CheckCircle2, Sliders, Clock, Trophy, XCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -245,16 +247,34 @@ export default function RoomDetailPage() {
   const isFull = room.estado === 'LLENA' || room.ticketsSold >= room.capacidadMax;
 
   return (
-    <div className="flex-1 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-      {/* Botón Volver */}
-      <div className="mb-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Volver a todas las salas
-        </Link>
-      </div>
+    <div className="flex-1 flex flex-col w-full">
+      {/* Barra Superior Móvil Oficial de Casino */}
+      <TopCasinoBar
+        title={`${room.nombre} • Sorteo en Vivo`}
+        showBack={true}
+        backHref="/"
+      />
+
+      {/* Contenedor Principal */}
+      <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        {/* Cabecera de Jackpots de Casino */}
+        <div className="mb-6">
+          <JackpotHeader
+            grandAmount={Number(room.premio)}
+            majorAmount={Number(room.premio) * 0.45}
+            minorAmount={Number(room.premio) * 0.12}
+          />
+        </div>
+
+        {/* Botón Volver */}
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Volver a todas las salas
+          </Link>
+        </div>
 
       {/* Si la sala está sorteando o ya finalizó con ganador, mostrar Ruleta Animada */}
       {(isDrawing || winnerData || room.estado === 'SORTEANDO' || room.estado === 'FINALIZADA') && (
@@ -469,8 +489,8 @@ export default function RoomDetailPage() {
                 <PaymentLogos showLabel={false} />
               </div>
 
-              <p className="text-[11px] text-center text-slate-500">
-                Protegido por autenticación bancaria 3D Secure y certificación internacional PCI DSS. Máximo 6 participaciones al día.
+              <p className="text-[11px] text-center text-slate-400">
+                Transferencia bancaria directa a cuenta a nombre del titular del DUI registrado. Protegido por Wompi 3D Secure y PCI DSS. Máx. 3 victorias por 24 horas.
               </p>
             </div>
           )}
@@ -487,8 +507,12 @@ export default function RoomDetailPage() {
           }`}>
             {resultModal === 'WINNER' ? (
               <div className="space-y-4">
-                <div className="w-20 h-20 mx-auto rounded-3xl bg-yellow-400/20 border-2 border-yellow-400 flex items-center justify-center text-5xl shadow-xl shadow-yellow-400/30 animate-bounce">
-                  🏆
+                <div className="w-24 h-24 mx-auto rounded-full p-1 bg-gradient-to-tr from-amber-400 via-pink-500 to-yellow-300 shadow-2xl shadow-yellow-400/40 animate-bounce">
+                  <img
+                    src="/images/premios-host.jpg"
+                    alt="¡Ganador Oficial!"
+                    className="w-full h-full object-cover rounded-full"
+                  />
                 </div>
                 <span className="px-4 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 uppercase tracking-widest inline-block shadow-lg">
                   ¡TENEMOS UN GANADOR!
@@ -505,7 +529,7 @@ export default function RoomDetailPage() {
                   </span>
                   <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-amber-300 font-semibold bg-amber-500/10 py-1.5 px-3 rounded-full border border-amber-500/20">
                     <Clock className="w-3.5 h-3.5 animate-spin" />
-                    Transferencia bancaria en proceso de acreditación
+                    Transferencia directa a cuenta a nombre de tu DUI registrado
                   </div>
                 </div>
 
@@ -526,10 +550,14 @@ export default function RoomDetailPage() {
               </div>
             ) : resultModal === 'LOSER' ? (
               <div className="space-y-4">
-                <div className="w-20 h-20 mx-auto rounded-3xl bg-rose-500/20 border-2 border-rose-500/40 flex items-center justify-center text-4xl shadow-xl shadow-rose-500/20">
-                  🐷
+                <div className="w-20 h-20 mx-auto rounded-2xl overflow-hidden ring-2 ring-purple-500/40 shadow-xl shadow-purple-500/20">
+                  <img
+                    src="/images/banquero.jpg"
+                    alt="El Banquero"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase tracking-widest inline-block">
+                <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase tracking-widest inline-block">
                   Sorteo Finalizado
                 </span>
                 <h2 className="text-2xl font-black text-white">¡Gracias por Participar!</h2>
@@ -553,7 +581,7 @@ export default function RoomDetailPage() {
                 </div>
 
                 <p className="text-xs text-slate-400">
-                  ¡No te rindas! Sigue participando en las salas activas de la comunidad.
+                  ¡No te rindas! El Banquero y la suerte te esperan en las próximas salas activas.
                 </p>
 
                 <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
@@ -573,15 +601,19 @@ export default function RoomDetailPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-3xl">
-                  🎉
+                <div className="w-20 h-20 mx-auto rounded-full p-1 bg-gradient-to-tr from-amber-400 to-purple-500 shadow-xl shadow-amber-500/30">
+                  <img
+                    src="/images/piggy-logo.jpg"
+                    alt="Rey Piggy"
+                    className="w-full h-full object-cover rounded-full"
+                  />
                 </div>
                 <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest inline-block">
                   Sorteo Concluido
                 </span>
                 <h2 className="text-2xl font-black text-white">¡Tenemos un Ganador!</h2>
                 <p className="text-xs text-slate-300">
-                  El boleto <strong className="text-amber-400 font-mono">#{winnerData.ticketGanador}</strong> perteneciente a <strong className="text-white">{winnerData.ganadorNombre}</strong> ha ganado el premio de ${Number(winnerData.premio || room.premio).toFixed(2)} USD.
+                  El boleto <strong className="text-amber-400 font-mono">#{winnerData?.ticketGanador || room.winnerTicketId || '---'}</strong> perteneciente a <strong className="text-white">{winnerData?.ganadorNombre || 'Jugador'}</strong> ha ganado el premio de ${Number(winnerData?.premio || room.premio).toFixed(2)} USD.
                 </p>
 
                 <div className="pt-2 flex justify-center">
@@ -597,6 +629,7 @@ export default function RoomDetailPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

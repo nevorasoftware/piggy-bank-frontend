@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Room } from '@/types';
 import PiggyMascot from '@/components/ui/PiggyMascot';
 import { Clock, Users, Sparkles, Trophy, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { playCoinSound } from '@/lib/sound';
 
 interface GiftRoomCardProps {
   room: Room;
@@ -139,9 +140,10 @@ export default function GiftRoomCard({ room }: GiftRoomCardProps) {
         <div className="w-full mt-4 pt-3 border-t border-white/10 flex justify-center">
           <Link
             href={`/rooms/${room.id}`}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wider shadow-lg shadow-amber-500/30 hover:shadow-amber-400/60 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group/btn"
+            onClick={playCoinSound}
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl bg-gradient-to-b from-yellow-300 via-amber-400 to-amber-500 border-b-4 border-amber-600 text-slate-950 font-black text-sm sm:text-base uppercase tracking-wider shadow-xl shadow-amber-500/30 hover:brightness-110 active:border-b-0 active:translate-y-1 transition-all duration-150 flex items-center justify-center gap-2 group/btn"
           >
-            <span>🎁 Ingresar a la Sala</span>
+            <span>🎰 ¡Jugar en esta Sala!</span>
             <ArrowRight className="w-4 h-4 text-slate-950 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </div>

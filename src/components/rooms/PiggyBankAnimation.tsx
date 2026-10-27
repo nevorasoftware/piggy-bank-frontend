@@ -64,79 +64,35 @@ export default function PiggyBankAnimation({
         </div>
       )}
 
-      {/* Cerdito Alcancía Ilustrado con Corona de la Suerte */}
+      {/* Cerdito Alcancía: Rey Piggy Oficial de Casino */}
       <motion.div
         animate={{
           scale: isDrawing ? [1, 1.08, 1] : [1, 1.03, 1],
-          y: isDrawing ? [-3, 3, -3] : [0, -6, 0],
-          rotate: isDrawing ? [-1.5, 1.5, -1.5] : [0, 0, 0],
+          y: isDrawing ? [-4, 4, -4] : [0, -6, 0],
+          rotate: isDrawing ? [-2, 2, -2] : [0, 0, 0],
         }}
         transition={{
           repeat: Infinity,
-          duration: isDrawing ? 0.4 : 2.8,
+          duration: isDrawing ? 0.35 : 2.5,
           ease: 'easeInOut',
         }}
-        className="relative z-10"
-        style={{ filter: `drop-shadow(0 15px 30px ${glowColor})` }}
+        className="relative z-10 w-44 h-44 sm:w-52 sm:h-52 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-purple-600 to-yellow-300 shadow-2xl"
+        style={{
+          boxShadow: isDrawing
+            ? '0 0 45px rgba(250, 204, 21, 0.8), 0 0 80px rgba(168, 85, 247, 0.5)'
+            : '0 0 35px rgba(250, 204, 21, 0.5), 0 0 60px rgba(168, 85, 247, 0.35)',
+        }}
       >
-        <svg
-          width="180"
-          height="140"
-          viewBox="0 0 200 160"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Patitas traseras */}
-          <rect x="52" y="125" width="22" height="26" rx="10" fill={skinColor} opacity="0.8" />
-          <rect x="126" y="125" width="22" height="26" rx="10" fill={skinColor} opacity="0.8" />
+        <img
+          src="/images/piggy-logo.jpg"
+          alt="Rey Piggy Casino"
+          className="w-full h-full object-cover rounded-full select-none"
+        />
 
-          {/* Patitas delanteras */}
-          <rect x="42" y="128" width="24" height="24" rx="8" fill={skinColor} />
-          <rect x="134" y="128" width="24" height="24" rx="8" fill={skinColor} />
-
-          {/* Cuerpo principal del cerdito */}
-          <ellipse cx="100" cy="95" rx="72" ry="52" fill={skinColor} />
-
-          {/* Brillo 3D del cuerpo */}
-          <ellipse cx="80" cy="75" rx="45" ry="30" fill="white" opacity="0.15" />
-
-          {/* Ranura para monedas */}
-          <rect x="85" y="44" width="30" height="7" rx="3.5" fill="#0B0F19" />
-          <rect x="86" y="45" width="28" height="3" rx="1.5" fill="#FACC15" opacity={isFull ? '0' : '0.8'} />
-
-          {/* Orejita izquierda */}
-          <path d="M48 65C45 42 62 48 70 56C62 65 52 72 48 65Z" fill={skinColor} stroke="#070A12" strokeWidth="2" />
-          <path d="M52 62C50 48 62 52 66 57C60 63 54 68 52 62Z" fill="#FBCFE8" opacity="0.6" />
-
-          {/* Orejita derecha */}
-          <path d="M125 56C133 48 150 42 147 65C143 72 133 65 125 56Z" fill={skinColor} stroke="#070A12" strokeWidth="2" />
-          <path d="M129 57C133 52 145 48 143 62C141 68 135 63 129 57Z" fill="#FBCFE8" opacity="0.6" />
-
-          {/* Ojito izquierdo */}
-          <circle cx="68" cy="85" r="7" fill="#070A12" />
-          <circle cx="66" cy="83" r="2.5" fill="white" />
-
-          {/* Ojito derecho */}
-          <circle cx="112" cy="85" r="7" fill="#070A12" />
-          <circle cx="110" cy="83" r="2.5" fill="white" />
-
-          {/* Trompa del cerdito */}
-          <ellipse cx="90" cy="104" rx="20" ry="14" fill="#F472B6" />
-          <ellipse cx="84" cy="104" rx="3.5" ry="5.5" fill="#831843" />
-          <ellipse cx="96" cy="104" rx="3.5" ry="5.5" fill="#831843" />
-
-          {/* Rubor en mejillas */}
-          <circle cx="52" cy="98" r="6" fill="#F43F5E" opacity="0.4" />
-          <circle cx="128" cy="98" r="6" fill="#F43F5E" opacity="0.4" />
-
-          {/* Colita enroscada */}
-          <path
-            d="M165 92C175 88 178 96 172 100C168 103 174 108 176 104"
-            stroke={skinColor}
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-        </svg>
+        {/* Moneda flotante con destello */}
+        <div className="absolute -bottom-1 -right-1 w-11 h-11 rounded-full bg-gradient-to-tr from-yellow-300 to-amber-500 border-2 border-white shadow-xl flex items-center justify-center font-black text-slate-950 text-lg font-mono">
+          $
+        </div>
       </motion.div>
 
       {/* GRAN CAJA DE REGALO CON PREMIO AL CENTRO */}

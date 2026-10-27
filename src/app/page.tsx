@@ -5,14 +5,17 @@ import Link from 'next/link';
 import { Room } from '@/types';
 import { apiRequest } from '@/lib/api';
 import { useSocket } from '@/context/SocketContext';
+import { useAuth } from '@/context/AuthContext';
 import GiftRoomCard from '@/components/rooms/GiftRoomCard';
-import PiggyMascot from '@/components/ui/PiggyMascot';
-import { Sparkles, Trophy, Users, Clock, ShieldCheck, ArrowRight, Zap, Coins, Gift } from 'lucide-react';
+import TopCasinoBar from '@/components/casino/TopCasinoBar';
+import CasinoStageHero from '@/components/casino/CasinoStageHero';
+import { Gift, Crown, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const { socket } = useSocket();
+  const { user } = useAuth();
 
   const fetchRooms = async () => {
     try {
@@ -48,89 +51,33 @@ export default function HomePage() {
   }, [socket]);
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* HERO SECTION CON ANIMACIONES Y CERDITO */}
-      <section className="relative overflow-hidden py-16 lg:py-24 border-b border-white/5">
-        {/* Luces y gradientes de fondo */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-radial from-amber-500/20 via-pink-500/10 to-transparent blur-3xl pointer-events-none" />
+    <div className="flex-1 flex flex-col bg-[#070A12] text-slate-100">
+      {/* ======================================================== */}
+      {/* 1. BARRA SUPERIOR DE CASINO MÓVIL (ESTILO GENIUSBET PIGGY TAP) */}
+      {/* ======================================================== */}
+      <TopCasinoBar title="Piggy Bank (Sorteos en Vivo)" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          {/* Cerdito Mascota Animado en Grande con Lluvia de Monedas */}
-          <div className="mb-4 flex justify-center">
-            <PiggyMascot size="lg" showCoins={true} />
-          </div>
+      {/* ======================================================== */}
+      {/* 2. ESCENARIO CENTRAL GAMING: 3 JACKPOTS, MONTAÑA DE ORO Y HUD */}
+      {/* ======================================================== */}
+      <CasinoStageHero userBalance={0} />
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-amber-400/40 text-amber-300 text-xs font-bold mb-6 animate-bounce-soft shadow-lg shadow-amber-500/20">
-            <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
-            <span>¡Salas de Sorteo con Premios Instantáneos en El Salvador!</span>
-            <span className="text-base">🎁</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight mb-6">
-            Abre tu Regalo, <br />
-            <span className="text-gold-gradient drop-shadow-[0_4px_16px_rgba(250,204,21,0.5)]">
-              Gana Dinero en Efectivo
-            </span>
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300 mb-10 leading-relaxed font-medium">
-            Entra a tu sala de regalo favorita, consigue tu pase pagando con tu tarjeta de crédito o débito (Visa o Mastercard) y sigue la cuenta regresiva en vivo. Si el cerdito de la suerte te elige, el premio va directo a tu cuenta bancaria.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#salas"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 font-black text-base shadow-xl shadow-amber-500/30 hover:shadow-amber-400/60 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group"
-            >
-              <Gift className="w-5 h-5 text-slate-950 group-hover:rotate-12 transition-transform" />
-              Ver Salas de Regalo
-              <ArrowRight className="w-4 h-4" />
-            </a>
-
-            <Link
-              href="/auth/register"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl glass-panel border border-white/10 hover:border-amber-400/50 text-white font-bold text-base hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <Zap className="w-4 h-4 text-amber-400" />
-              Crear Cuenta con DUI
-            </Link>
-          </div>
-
-          {/* Estadísticas en vivo */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-16 pt-10 border-t border-white/10">
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
-              <span className="text-2xl sm:text-3xl font-black text-white font-mono">$15,400+</span>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Premios Entregados</p>
-            </div>
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
-              <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono">100%</span>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Tarjeta Crédito / Débito</p>
-            </div>
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
-              <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">10 Min</span>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Avisos por WhatsApp</p>
-            </div>
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 hover:border-amber-400/30 transition-colors">
-              <span className="text-2xl sm:text-3xl font-black text-rose-400 font-mono">6 / 3</span>
-              <p className="text-xs text-slate-400 mt-1 font-semibold">Límite Diario Seguro</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SALAS EN JUEGO - CAJAS DE REGALO GIGANTES */}
+      {/* ======================================================== */}
+      {/* 3. LOBBY DE SALAS DE REGALO ACTIVAS */}
+      {/* ======================================================== */}
       <section id="salas" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <div className="flex items-center gap-2 text-xs font-black text-amber-400 uppercase tracking-widest mb-2">
-              <Gift className="w-4 h-4 text-amber-400 animate-bounce" /> Salas de Regalo Activas
+            <div className="inline-flex items-center gap-2 text-xs font-black text-amber-400 uppercase tracking-widest mb-2 bg-amber-500/10 px-3.5 py-1.5 rounded-full border border-amber-500/20">
+              <Gift className="w-4 h-4 text-amber-400 animate-bounce" />
+              <span>Salas de Sorteo Activas</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
               Abre tu Regalo y Participa
             </h2>
           </div>
-          <p className="text-sm text-slate-400 mt-2 md:mt-0 font-medium">
-            Paga tu pase con tarjeta de crédito o débito Visa o Mastercard de forma 100% segura.
+          <p className="text-sm text-slate-300 mt-2 md:mt-0 font-medium max-w-md">
+            Elige la sala con el premio que deseas. Paga seguro con tarjeta y sigue la cuenta regresiva en vivo.
           </p>
         </div>
 
@@ -157,7 +104,85 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* CÓMO FUNCIONA */}
+      {/* ======================================================== */}
+      {/* 4. SHOWCASE DE PERSONAJES OFICIALES DE PIGGYBANK */}
+      {/* ======================================================== */}
+      <section className="py-20 border-t border-white/10 bg-gradient-to-b from-slate-950 via-[#0d091f] to-slate-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-black uppercase tracking-wider mb-3 border border-purple-500/30">
+              <Crown className="w-4 h-4 text-amber-400" />
+              <span>Conoce a los Anfitriones</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Los Personajes de PiggyBank
+            </h2>
+            <p className="text-sm text-slate-300 mt-3 leading-relaxed">
+              Cada personaje cumple un rol fundamental para garantizar diversión, sorteos justos y acreditación directa de premios.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Personaje 1: El Rey Cerdito */}
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-amber-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+              <div className="relative w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-xl shadow-amber-500/30 mb-6 group-hover:scale-105 transition-transform">
+                <img
+                  src="/images/piggy-logo.jpg"
+                  alt="Rey Piggy Oficial"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 shadow-md mb-2">
+                LA MASCOTA OFICIAL
+              </span>
+              <h3 className="text-2xl font-black text-white mb-2">El Rey Piggy</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                El guardián de la alcancía dorada. Representa la suerte, la abundancia y el acumulado de cada sala comunitaria.
+              </p>
+            </div>
+
+            {/* Personaje 2: El Banquero */}
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 bg-gradient-to-b from-purple-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+              <div className="relative w-36 h-36 rounded-3xl overflow-hidden ring-4 ring-purple-400/50 shadow-xl shadow-purple-500/30 mb-6 group-hover:scale-105 transition-transform">
+                <img
+                  src="/images/banquero.jpg"
+                  alt="El Banquero"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-400 text-slate-950 shadow-md mb-2">
+                SEGURIDAD Y PAGOS
+              </span>
+              <h3 className="text-2xl font-black text-white mb-2">El Banquero</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Supervisa la mesa de juego, valida las compras vía Wompi y coordina las transferencias directas a cuentas con DUI verificado.
+              </p>
+            </div>
+
+            {/* Personaje 3: La Presentadora */}
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-pink-500/30 bg-gradient-to-b from-pink-500/10 via-slate-900 to-slate-950 text-center flex flex-col items-center hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+              <div className="relative w-36 h-36 rounded-3xl overflow-hidden ring-4 ring-pink-400/50 shadow-xl shadow-pink-500/30 mb-6 group-hover:scale-105 transition-transform">
+                <img
+                  src="/images/premios-host.jpg"
+                  alt="Anfitriona de Premios"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-400 text-slate-950 shadow-md mb-2">
+                SORTEOS EN VIVO
+              </span>
+              <h3 className="text-2xl font-black text-white mb-2">Premios y Sorteos</h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Conduce los sorteos de la ruleta, anuncia el boleto ganador en tiempo real y celebra la victoria de los afortunados.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ======================================================== */}
+      {/* 5. CÓMO FUNCIONA EN 3 PASOS */}
+      {/* ======================================================== */}
       <section className="py-20 border-t border-white/5 bg-slate-950/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">¿Cómo Funciona PiggyBank?</h2>
@@ -199,7 +224,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* BANNER LEGAL Y JUEGO RESPONSABLE */}
+      {/* ======================================================== */}
+      {/* 6. BANNER LEGAL Y JUEGO RESPONSABLE (+18) */}
+      {/* ======================================================== */}
       <section className="py-12 border-t border-white/5 bg-gradient-to-b from-slate-950/60 to-slate-950">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900/90 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
@@ -211,14 +238,14 @@ export default function HomePage() {
                 Sorteos Seguros, Verificables y Confiables
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                Operamos bajo estrictos estándares de juego responsable (+18), pasarela bancaria autorizada Wompi (Banco Agrícola) y protección al usuario en El Salvador.
+                Medio de Entrega: Transferencia bancaria directa a cuenta a nombre del titular del DUI registrado. Máximo 3 premios ganados por usuario cada 24 horas. Exclusivo mayores de 18 años.
               </p>
             </div>
             <Link
               href="/terms"
               className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-black text-xs sm:text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-amber-500/20 shrink-0 flex items-center gap-2"
             >
-              Leer Términos y Condiciones
+              <span>Leer Términos y Condiciones</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

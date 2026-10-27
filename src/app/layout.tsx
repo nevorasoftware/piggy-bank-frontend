@@ -10,6 +10,14 @@ import FloatingCoins from '@/components/ui/FloatingCoins';
 export const metadata: Metadata = {
   title: 'PiggyBank El Salvador | Sorteos y Premios en Efectivo',
   description: 'Participa en salas de sorteo comunitarias y gana premios directos a tu cuenta bancaria. Pagos 100% seguros con Tarjeta de Crédito o Débito (Visa, Mastercard, 3D Secure, PCI-DSS) y verificación de DUI.',
+  icons: {
+    icon: [
+      { url: '/images/piggy-logo.jpg', sizes: 'any' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/images/piggy-logo.jpg',
+    shortcut: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

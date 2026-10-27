@@ -16,21 +16,26 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo & Brand */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 p-0.5 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
-              <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center overflow-hidden">
-                <PiggyMascot size="sm" showCoins={false} />
-              </div>
+            <div className="relative w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-purple-500 to-yellow-300 shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform duration-300">
+              <img
+                src="/images/piggy-logo.jpg"
+                alt="PiggyBank Logo"
+                className="w-full h-full object-cover rounded-full"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-950 shadow-sm animate-pulse" title="Sorteos en vivo" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-2xl font-black tracking-tight text-white font-mono">
                   Piggy<span className="text-gold-gradient">Bank</span>
                 </span>
-                <span className="px-1.5 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-400 rounded-md border border-amber-500/30">
+                <span className="px-1.5 py-0.5 text-[10px] font-black bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 rounded-md shadow-sm">
                   SV
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium">Sorteos & Premios en Efectivo</p>
+              <p className="text-[11px] text-amber-300/90 font-bold tracking-wide flex items-center gap-1">
+                <span>🎰</span> Salas de Sorteo en Vivo
+              </p>
             </div>
           </Link>
 
