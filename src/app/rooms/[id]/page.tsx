@@ -119,6 +119,36 @@ export default function RoomDetailPage() {
     };
   }, [roomId, socket, user]);
 
+  // Detectar si el usuario retorna desde la pasarela de Wompi con ?status=success&ref=...
+  useEffect(() => {
+    if (typeof window !== 'undefined' && user) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref');
+      if (ref) {
+        const confirmPaymentReturn = async () => {
+          try {
+            setBuying(true);
+            const confirmRes = await apiRequest('/api/tickets/confirm', {
+              method: 'POST',
+              body: JSON.stringify({ reference: ref }),
+            });
+            if (confirmRes.success) {
+              await fetchRoomData();
+              await fetchMyPass();
+              // Limpiar query params de la URL limpiamente sin recargar
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          } catch (err: any) {
+            console.error('Error al confirmar retorno de Wompi:', err);
+          } finally {
+            setBuying(false);
+          }
+        };
+        confirmPaymentReturn();
+      }
+    }
+  }, [user]);
+
   // 2. Iniciar compra con Wompi (Validación de reglas 6/3 previa)
   const handleBuyTicket = async () => {
     if (!user) {
@@ -141,27 +171,19 @@ export default function RoomDetailPage() {
       });
 
       if (res.success && res.checkout) {
-        // En entorno de producción, aquí se abre el widget de Wompi El Salvador o redirección:
-        // window.location.href = res.checkout.redirectUrl;
-        // Para pruebas y demostración fluida, simulamos la confirmación directa del webhook
-        const webhookRes = await apiRequest('/api/webhooks/wompi', {
+        // Si Wompi generó el enlace oficial de pago (https://s.wompi.sv/...)
+        if (res.checkout.paymentUrl) {
+          window.location.href = res.checkout.paymentUrl;
+          return;
+        }
+
+        // Si no hay enlace remoto o es flujo directo/pruebas:
+        const confirmRes = await apiRequest('/api/tickets/confirm', {
           method: 'POST',
-          body: JSON.stringify({
-            event: 'transaction.updated',
-            data: {
-              transaction: {
-                id: `wompi_${Date.now()}`,
-                reference: res.checkout.reference,
-                amount_in_cents: res.checkout.amountInCents,
-                currency: 'USD',
-                status: 'APPROVED',
-                payment_method_type: 'CARD',
-              },
-            },
-          }),
+          body: JSON.stringify({ reference: res.checkout.reference }),
         });
 
-        if (webhookRes.success) {
+        if (confirmRes.success) {
           await fetchRoomData();
           await fetchMyPass();
         }
