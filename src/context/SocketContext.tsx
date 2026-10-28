@@ -8,6 +8,8 @@ interface SocketContextType {
   isConnected: boolean;
   joinRoom: (roomId: string) => void;
   leaveRoom: (roomId: string) => void;
+  joinUser: (userId: string) => void;
+  leaveUser: (userId: string) => void;
 }
 
 const SocketContext = createContext<SocketContextType>({
@@ -15,6 +17,8 @@ const SocketContext = createContext<SocketContextType>({
   isConnected: false,
   joinRoom: () => {},
   leaveRoom: () => {},
+  joinUser: () => {},
+  leaveUser: () => {},
 });
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
@@ -72,6 +76,18 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const joinUser = (userId: string) => {
+    if (socket && isConnected && userId) {
+      socket.emit('join_user', userId);
+    }
+  };
+
+  const leaveUser = (userId: string) => {
+    if (socket && isConnected && userId) {
+      socket.emit('leave_user', userId);
+    }
+  };
+
   return (
     <SocketContext.Provider
       value={{
@@ -79,6 +95,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         isConnected,
         joinRoom,
         leaveRoom,
+        joinUser,
+        leaveUser,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ import { apiRequest } from '@/lib/api';
 import { Ticket, AccountType } from '@/types';
 import DigitalPass from '@/components/rooms/DigitalPass';
 import { formatPhoneDisplay } from '@/lib/phone';
+import { playCoinSound } from '@/lib/sound';
 import { Building2, CreditCard, Shield, Clock, Ticket as TicketIcon, CheckCircle2, AlertCircle, Save } from 'lucide-react';
 
 const SALVADORAN_BANKS = [
@@ -24,7 +25,7 @@ const SALVADORAN_BANKS = [
 
 export default function ProfilePage() {
   const { user, refreshMe } = useAuth();
-  const { socket } = useSocket();
+  const { socket, joinUser, leaveUser } = useSocket();
 
   const [bankName, setBankName] = useState('');
   const [accountType, setAccountType] = useState<AccountType>('AHORRO');
@@ -56,27 +57,89 @@ export default function ProfilePage() {
 
     loadParticipationStatus();
     loadTickets();
-  }, [user]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('global:sorteo_winner', () => {
-        loadTickets();
-        loadParticipationStatus();
-      });
-      socket.on('rooms:list_update', () => {
-        loadTickets();
-        loadParticipationStatus();
-      });
+    if (user?.id) {
+      joinUser(user.id);
     }
 
     return () => {
-      if (socket) {
-        socket.off('global:sorteo_winner');
-        socket.off('rooms:list_update');
+      if (user?.id) {
+        leaveUser(user.id);
       }
     };
-  }, [socket]);
+  }, [user]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handlePayoutApplied = (data: any) => {
+      console.log('⚡ [Profile] Pago aplicado recibido en tiempo real:', data);
+      // 1. Actualización optimista inmediata en memoria para cambiar el ticket de amarillo a verde al instante sin F5
+      setTickets((prev) =>
+        prev.map((t) => {
+          const matches =
+            t.room?.id === data.roomId ||
+            t.room?.sorteo?.id === data.sorteoId ||
+            (data.sorteoId && t.room?.sorteo?.id === data.sorteoId);
+
+          if (matches && t.room) {
+            return {
+              ...t,
+              room: {
+                ...t.room,
+                sorteo: {
+                  ...(t.room.sorteo || {
+                    id: data.sorteoId || '',
+                    roomId: t.roomId,
+                    ganadorUserId: data.ganadorUserId,
+                    ticketGanadorId: t.id,
+                    montoPremio: data.montoPremio || 0,
+                    fechaSorteo: new Date().toISOString(),
+                  }),
+                  estadoPago: 'PAGADO',
+                  fechaPago: data.fechaPago ? String(data.fechaPago) : new Date().toISOString(),
+                  notasPago: data.notasPago || t.room.sorteo?.notasPago,
+                },
+              },
+            } as Ticket;
+          }
+          return t;
+        })
+      );
+
+      // Si el ganador es el usuario actual, emitir sonido de confirmación
+      if (user && data.ganadorUserId === user.id) {
+        playCoinSound();
+      }
+
+      // 2. Re-consulta al backend para sincronizar todos los datos
+      loadTickets();
+      loadParticipationStatus();
+    };
+
+    socket.on('global:sorteo_winner', () => {
+      loadTickets();
+      loadParticipationStatus();
+    });
+
+    socket.on('rooms:list_update', () => {
+      loadTickets();
+      loadParticipationStatus();
+    });
+
+    // Escuchar eventos de pago aplicado en tiempo real
+    socket.on('payout:applied', handlePayoutApplied);
+    socket.on('global:payout_applied', handlePayoutApplied);
+    socket.on('user:payout_applied', handlePayoutApplied);
+
+    return () => {
+      socket.off('global:sorteo_winner');
+      socket.off('rooms:list_update');
+      socket.off('payout:applied', handlePayoutApplied);
+      socket.off('global:payout_applied', handlePayoutApplied);
+      socket.off('user:payout_applied', handlePayoutApplied);
+    };
+  }, [socket, user]);
 
   const loadParticipationStatus = async () => {
     try {

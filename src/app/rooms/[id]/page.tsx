@@ -131,6 +131,58 @@ export default function RoomDetailPage() {
           setIsDrawing(true);
         }
       });
+
+      const handlePayoutApplied = (data: any) => {
+        if (data.roomId === roomId) {
+          console.log('⚡ [Room] Evento de pago aplicado recibido en tiempo real:', data);
+          // Actualización optimista inmediata en memoria para cambiar el ticket a verde al instante
+          setMyTicket((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              room: prev.room
+                ? {
+                    ...prev.room,
+                    sorteo: {
+                      ...(prev.room.sorteo || {
+                        id: data.sorteoId || '',
+                        roomId: data.roomId,
+                        ganadorUserId: data.ganadorUserId,
+                        ticketGanadorId: prev.id,
+                        montoPremio: data.montoPremio || 0,
+                        fechaSorteo: new Date().toISOString(),
+                      }),
+                      estadoPago: 'PAGADO',
+                      fechaPago: data.fechaPago ? String(data.fechaPago) : new Date().toISOString(),
+                      notasPago: data.notasPago || prev.room.sorteo?.notasPago,
+                    },
+                  }
+                : prev.room,
+            } as Ticket;
+          });
+
+          setRoom((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              sorteo: prev.sorteo
+                ? {
+                    ...prev.sorteo,
+                    estadoPago: 'PAGADO',
+                    fechaPago: data.fechaPago || new Date().toISOString(),
+                    notasPago: data.notasPago || prev.sorteo.notasPago,
+                  }
+                : prev.sorteo,
+            };
+          });
+
+          fetchRoomData();
+          fetchMyPass();
+        }
+      };
+
+      socket.on('payout:applied', handlePayoutApplied);
+      socket.on('global:payout_applied', handlePayoutApplied);
     }
 
     return () => {
@@ -141,6 +193,8 @@ export default function RoomDetailPage() {
         socket.off('room:update');
         socket.off('sorteo:iniciar');
         socket.off('sorteo:ganador');
+        socket.off('payout:applied');
+        socket.off('global:payout_applied');
       }
     };
   }, [roomId, socket, user, myTicket]);
@@ -412,7 +466,14 @@ export default function RoomDetailPage() {
               </div>
 
               <DigitalPass
-                ticket={myTicket}
+                ticket={{
+                  ...myTicket,
+                  room: {
+                    ...(myTicket.room || {}),
+                    ...(room || {}),
+                    sorteo: room?.sorteo || myTicket.room?.sorteo,
+                  } as any,
+                }}
                 userName={user?.fullName || 'Jugador'}
                 userDui={user?.dui}
                 roomName={room.nombre}
